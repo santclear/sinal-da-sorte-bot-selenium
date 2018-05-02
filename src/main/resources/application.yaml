@@ -1,0 +1,9 @@
+#spring.profiles.active=test
+spring:
+  profiles:
+    active: test
+#    active: dev
+
+default:
+  sender: sinaldasorteweb@gmail.com
+  recipient: sinaldasorteweb@gmail.com

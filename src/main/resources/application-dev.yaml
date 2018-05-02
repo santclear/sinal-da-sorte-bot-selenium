@@ -1,0 +1,56 @@
+# mysql
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/bdsinalsorte?verifyServerCertificate=false&useSSL=false&requireSSL=false
+    username: santclear
+    password: admin123
+    driver-class-name: com.mysql.jdbc.Driver
+  data:
+    jpa:
+      repositories:
+        enabled: true
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    generate-ddl: true
+    hibernate:
+#      ddl-auto: create
+      ddl-auto: none
+    
+## h2
+#spring:
+#  datasource:
+#    url: jdbc:h2:mem:testdb
+#    username: sa
+#    password: 
+    
+# Comum com mysql e h2
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true #mostra as execuções de queries de forma amigável
+            
+# PORTA DO SERVIDOR EMBUTIDO
+server:
+  port: 8080
+
+
+sinaldasorte:
+  front:
+    url: http://localhost:8100/
+  ws:
+    url: http://localhost:8080/
+  www: www.sinaldasorte.com
+  email: sinaldasorteweb@gmail.com
+  adverbio: Atenciosamente
+  responsavel: Ali
+  copyright: Copyright Sinal da Sorte 2018
+  organizacao: Sant'Clear Soluções
+  slogan: Aposte com estratégia.
+  
+  google:
+    tokenUrl: 
+    oauthClientId: 
+    oauthSecret: 
+    refreshToken: 
+    accessToken: 
+    tokenExpires: 

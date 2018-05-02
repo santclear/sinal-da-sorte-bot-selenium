@@ -1,0 +1,25 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb
+    username: sa
+    password: 
+#debug
+  jpa:
+    show-sql: true
+#mostra as execuções de queries de forma amigável
+    properties:
+      hibernate:
+        format_sql: true
+
+sinaldasorte:
+  front:
+    url: http://localhost:8100/
+  ws:
+    url: http://localhost:8080/
+  www: www.sinaldasorte.com
+  email: sinaldasorteweb@gmail.com
+  adverbio: Atenciosamente
+  responsavel: Ali
+  copyright: Copyright Sinal da Sorte 2018
+  organizacao: Sant'Clear Soluções
+  slogan: Aposte com estratégia.
