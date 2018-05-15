@@ -6,6 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -24,15 +25,25 @@ public abstract class BasePage {
 	@FindBy(xpath="//*[@id='resultados']//*[contains(text(),'Concurso')]")
 	private WebElement concurso;
 	
+	@FindBy(xpath="//*[contains(text(),'Estimativa de prêmio do próximo concurso')]//following-sibling::*[contains(text(),'R$')]")
+	private WebElement estimativaDePremioParaOProximoConcurso;
+	
+	@FindBy(xpath="//*[contains(text(),'Valor acumulado')]//following-sibling::*[contains(text(),'R$')]")
+	private WebElement acumuladoParaOProximoConcurso;
+	
+	// Encontre o elemento que tem o texto 'Acumulado para...', a partir dele encontre o elemento irmão que contenha o texto 'R$'
+	@FindBy(xpath="//*[contains(text(),'Acumulado para Sorteio Especial')]//following-sibling::*[contains(text(),'R$')]")
+	private WebElement  acumuladoEspecial;
+	
 	// Encontre o elemento que tem o texto 'Arrecadação total', a partir dele encontre o irmão que tenha o filho que contem o texto 'R$'
 	@FindBy(xpath="//h3[text()='Arrecadação total']//following-sibling::*//*[contains(text(),'R$')]")
 	private WebElement arrecadacaoTotal;
 	
 	// Encontre o elemento que tem o texto 'Detalhamento', a partir dele encontre o elemento irmão 'p' que tenha um elemento filho 'strong'
-	@FindBy(xpath="//h3[text()='Detalhamento']//following-sibling::p//strong")
+	@FindBy(xpath="//h3[contains(text(),'Detalhamento')]//following-sibling::p//strong")
 	private List<WebElement> cidadesUfs;
 	
-	@FindBy(xpath="//h3[text()='Premiação']//following-sibling::p")
+	@FindBy(xpath="//h3[contains(text(),'Premiação')]//following-sibling::p")
 	private List<WebElement> rateios;
 	
 	public Integer getConcurso() {
@@ -45,6 +56,48 @@ public abstract class BasePage {
 			return Integer.parseInt(matcher.group().trim());
 		} else {
 			throw new ObjetoNaoEncontradoException("Não foi possível extrair o número do concurso.");
+		}
+	}
+	
+	public BigDecimal getEstimativaDePremioParaOProximoConcurso() {
+		String texto = estimativaDePremioParaOProximoConcurso.getText();
+		Pattern pattern = Pattern.compile("\\d+.+");
+		Matcher matcher = pattern.matcher(texto);
+		if (matcher.find()) {
+			texto = matcher.group().replaceAll("\\.", "").replaceAll(",", "\\.");
+			BigDecimal numero = new BigDecimal(texto);
+			return numero;
+		} else {
+			throw new ObjetoNaoEncontradoException("Não foi possível extrair o valor da Estimativa de prêmio do próximo concurso.");
+		}
+	}
+	
+	public BigDecimal getAcumuladoParaOProximoConcurso() {
+		String texto = acumuladoParaOProximoConcurso.getText();
+		Pattern pattern = Pattern.compile("\\d+.+");
+		Matcher matcher = pattern.matcher(texto);
+		if (matcher.find()) {
+			texto = matcher.group().replaceAll("\\.", "").replaceAll(",", "\\.");
+			BigDecimal numero = new BigDecimal(texto);
+			return numero;
+		} else {
+			return new BigDecimal(0);
+		}
+	}
+	
+	public BigDecimal getAcumuladoEspecial() {
+		// String do sorteio especial, exemplo: R$ 10.000,00
+		String texto = acumuladoEspecial.getText();
+		// Formato do regex para extrair somente o valor, exemplo: 10.000,00
+		Pattern pattern = Pattern.compile("\\d+.+");
+		Matcher matcher = pattern.matcher(texto);
+		if (matcher.find()) {
+			// Exclui os pontos (.), substitui o serador decimal vírgula (,) por ponto(.)
+			texto = matcher.group().replaceAll("\\.", "").replaceAll(",", "\\.");
+			BigDecimal numero = new BigDecimal(texto);
+			return numero;
+		} else {
+			throw new ObjetoNaoEncontradoException("Não foi possível extrair o valor do Acumulado Especial.");
 		}
 	}
 	
@@ -64,36 +117,64 @@ public abstract class BasePage {
 		}
 	}
 	
-	public String getCidades() {
+	public List<String> getCidades() {
+		List<String> sorteios = new LinkedList<>();
+		
+		this.addCidades(sorteios, cidadesUfs);
+		
+		return sorteios;
+	}
+	
+	protected void addCidades(List<String> sorteios, List<WebElement> cidadesUfs) {
 		StringBuilder cidadesStr = new StringBuilder();
 		for(WebElement cidadeUf: cidadesUfs) {
 			if(!cidadeUf.getText().isEmpty()) {
 				String cidadesUfsStr[] = cidadeUf.getText().split("-");
-				String cidadeStr = cidadesUfsStr[0].trim();
-				cidadesStr.append(cidadeStr);
-				cidadesStr.append(";");
+				String cidadeStr = ";";
+				if(cidadesUfsStr.length > 1) {
+					cidadeStr = cidadesUfsStr[0].trim();
+					cidadesStr.append(cidadeStr);
+					cidadesStr.append(";");
+				}
 			}
 		}
+		
 		if(!cidadesStr.toString().isEmpty()) {
-			return cidadesStr.toString().substring(0, cidadesStr.toString().length() - 1);
+			sorteios.add(cidadesStr.toString().substring(0, cidadesStr.toString().length() - 1));
+		} else {
+			cidadesStr.append(";");
+			sorteios.add(cidadesStr.toString());
 		}
-		return cidadesStr.toString();
 	}
 	
-	public String getUfs() {
+	public List<String> getUfs() {
+		List<String> sorteios = new LinkedList<>();
+		
+		this.addUfs(sorteios, cidadesUfs);
+		
+		return sorteios;
+	}
+	
+	protected void addUfs(List<String> sorteios, List<WebElement> cidadesUfs) {
 		StringBuilder ufsStr = new StringBuilder();
 		for(WebElement cidadeUf: cidadesUfs) {
 			if(!cidadeUf.getText().isEmpty()) {
 				String cidadesUfsStr[] = cidadeUf.getText().split("-");
-				String ufStr = cidadesUfsStr[1].trim();
+				String ufStr = ";";
+				if(cidadesUfsStr.length < 2) {
+					ufStr = cidadesUfsStr[0].trim();
+				} else {
+					ufStr = cidadesUfsStr[1].trim();
+				}
 				ufsStr.append(ufStr);
 				ufsStr.append(";");
 			}
 		}
 		if(!ufsStr.toString().isEmpty()) {
-			return ufsStr.toString().substring(0, ufsStr.toString().length() - 1);
+			sorteios.add(ufsStr.toString().substring(0, ufsStr.toString().length() - 1));
+		} else {
+			sorteios.add(ufsStr.toString());
 		}
-		return ufsStr.toString();
 	}
 	
 	public Calendar getDataSorteio() {
@@ -118,42 +199,59 @@ public abstract class BasePage {
 		}
 	}
 	
-	public List<BigDecimal> getRateios() {
+	public List<List<BigDecimal>> getRateios() {
+		List<List<BigDecimal>> sorteios = new LinkedList<>();
+		
+		this.addRateios(sorteios, rateios);
+		
+		return sorteios;
+	}
+	
+	public void addRateios(List<List<BigDecimal>> sorteios, List<WebElement> rateios) {
 		LinkedList<BigDecimal> rateiosBd = new LinkedList<>();
 		for(WebElement rateio: rateios) {
 			String texto = rateio.getText();
-			Pattern pattern = Pattern.compile("R\\$\\s[0-9\\.\\,]+");
+			Pattern pattern = Pattern.compile("(R\\$\\s[0-9\\.\\,]+)|(\\wão\\s\\wouve)");
 			Matcher matcher = pattern.matcher(texto);
 			if (matcher.find()) {
 				texto = matcher.group().replaceAll("\\.", "").replaceAll(",", "\\.").replace("R$", "").trim();
-				BigDecimal rateioBd = new BigDecimal(texto);
+				texto = texto.toLowerCase();
+				BigDecimal rateioBd = Objects.deepEquals(texto, "não houve")?new BigDecimal(0):new BigDecimal(texto);
 				rateiosBd.add(rateioBd);
 			}
 		}
 		rateiosBd.pollLast();
-		return rateiosBd;
+		sorteios.add(rateiosBd);
 	}
 	
-	public List<Integer> getNumeroGanhadores() {
+	public List<List<Integer>> getNumeroGanhadores() {
+		List<List<Integer>> sorteios = new LinkedList<>();
+		
+		this.addNumeroGanhadores(sorteios, rateios);
+		
+		return sorteios;
+	}
+	
+	public void addNumeroGanhadores(List<List<Integer>> sorteios, List<WebElement> rateios) {
 		LinkedList<Integer> numeroGanhadores = new LinkedList<>();
 		for(WebElement rateio: rateios) {
 			String texto = rateio.getText();
-			Pattern pattern = Pattern.compile("\\d+\\saposta");
+			Pattern pattern = Pattern.compile("(\\d+\\saposta)|(\\wão\\s\\wouve)");
 			Matcher matcher = pattern.matcher(texto);
 			if (matcher.find()) {
-				texto = matcher.group().replaceAll("\\D", "").trim();
-				Integer numeroGanhoresInt = new Integer(texto);
+				texto = matcher.group();
+				texto = texto.toLowerCase();
+				Integer numeroGanhoresInt = Objects.deepEquals(texto, "não houve")?new Integer(0):new Integer(texto.replaceAll("\\D", "").trim());
 				numeroGanhadores.add(numeroGanhoresInt);
 			}
 		}
-		return numeroGanhadores;
+		sorteios.add(numeroGanhadores);
 	}
 	
 	public Concurso paraConcursoEntity(Loteria loteria) {
 		Concurso obj = new Concurso();
+		obj.setAcumuladoEspecial(this.getAcumuladoEspecial());
 		obj.setArrecadacaoTotal(this.getArrecadacaoTotal());
-		obj.setCidade(this.getCidades());
-		obj.setUf(this.getUfs());
 		obj.setEstimativaDePremioParaOProximoConcurso(this.getEstimativaDePremioParaOProximoConcurso());
 		obj.setDataDoSorteio(this.getDataSorteio());
 		obj.setNumero(this.getConcurso());
@@ -164,8 +262,10 @@ public abstract class BasePage {
 	public List<Sorteio> paraSorteiosEntityList(Concurso concurso) {
 		List<Sorteio> sorteios = new LinkedList<>();
 		Sorteio obj = new Sorteio();
-		obj.setNumerosSorteados(this.getNumerosSorteados());
-		obj.setNumero(0);
+		obj.setNumerosSorteados(this.getNumerosSorteados().get(0));
+		obj.setCidadesGanhadoresPremioPrincipal(this.getCidades().get(0));
+		obj.setUfsGanhadoresPremioPrincipal(this.getUfs().get(0));
+		obj.setNumero(1);
 		obj.setConcurso(concurso);
 		sorteios.add(obj);
 		return sorteios;
@@ -174,7 +274,7 @@ public abstract class BasePage {
 	public List<Rateio> paraRateiosEntityList(List<Sorteio> sorteios) {
 		List<Rateio> rateios = new LinkedList<>();
 		int tipoDePremio = 1;
-		for(BigDecimal rateio: this.getRateios()) {
+		for(BigDecimal rateio: this.getRateios().get(0)) {
 			Rateio obj = new Rateio();
 			obj.setRateio(rateio);
 			obj.setTipoDePremio(String.valueOf(tipoDePremio));
@@ -184,16 +284,25 @@ public abstract class BasePage {
 			tipoDePremio++;
 		}
 		int i = 0;
-		for(Integer numeroGanhaores: this.getNumeroGanhadores()) {
+		for(Integer numeroGanhaores: this.getNumeroGanhadores().get(0)) {
 			rateios.get(i).setNumeroDeGanhadores(numeroGanhaores);
 			i++;
 		}
 		return rateios;
 	}
 	
-	abstract BigDecimal getEstimativaDePremioParaOProximoConcurso();
+	abstract List<String> getNumerosSorteados();
 	
-	abstract String getNumerosSorteados();
-	
-	abstract BigDecimal getAcumuladoParaOProximoConcurso();
+	protected void addNumerosSorteados(List<String> sorteios, List<WebElement> numerosSorteados, int indiceDezenaInicial, int indiceDezenaFinal) {
+		StringBuilder numerosSorteadosStr = new StringBuilder();
+		for(int i = indiceDezenaInicial; i < indiceDezenaFinal; i++) {
+			WebElement numero = numerosSorteados.get(i);
+			String numeroStr = numero.getText();
+			numerosSorteadosStr.append(numeroStr);
+			numerosSorteadosStr.append(";");
+		}
+		if(!numerosSorteadosStr.toString().isEmpty()) {
+			sorteios.add(numerosSorteadosStr.toString().substring(0, numerosSorteadosStr.toString().length() - 1));
+		}
+	}
 }

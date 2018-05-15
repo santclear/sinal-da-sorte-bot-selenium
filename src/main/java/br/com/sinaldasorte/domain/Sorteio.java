@@ -35,19 +35,25 @@ public class Sorteio implements Serializable {
 	@Column(nullable = false, length = 199)
 	private String numerosSorteados;
 	
-	@OneToMany(mappedBy = "sorteio", cascade = CascadeType.ALL, orphanRemoval=true)
+	private String cidadesGanhadoresPremioPrincipal;
+	
+	private String ufsGanhadoresPremioPrincipal;
+	
+	@OneToMany(mappedBy = "sorteio")
 	private List<Rateio> rateios = new LinkedList<>();
 	
 	public Sorteio() {}
 	
-	public Sorteio(Long id, Concurso concurso, int numero, String numerosSorteados) {
-		super();
+	public Sorteio(Long id, Concurso concurso, int numero, String numerosSorteados,
+			String cidadesGanhadoresPremioPrincipal, String ufsGanhadoresPremioPrincipal) {
 		this.id = id;
 		this.concurso = concurso;
 		this.numero = numero;
 		this.numerosSorteados = numerosSorteados;
+		this.cidadesGanhadoresPremioPrincipal = cidadesGanhadoresPremioPrincipal;
+		this.ufsGanhadoresPremioPrincipal = ufsGanhadoresPremioPrincipal;
 	}
-
+	
 	public Long getId() {
 		return id;
 	}
@@ -86,6 +92,22 @@ public class Sorteio implements Serializable {
 
 	public void setRateios(List<Rateio> rateios) {
 		this.rateios = rateios;
+	}
+
+	public String getCidadesGanhadoresPremioPrincipal() {
+		return cidadesGanhadoresPremioPrincipal;
+	}
+
+	public void setCidadesGanhadoresPremioPrincipal(String cidadesGanhadoresPremioPrincipal) {
+		this.cidadesGanhadoresPremioPrincipal = cidadesGanhadoresPremioPrincipal;
+	}
+
+	public String getUfsGanhadoresPremioPrincipal() {
+		return ufsGanhadoresPremioPrincipal;
+	}
+
+	public void setUfsGanhadoresPremioPrincipal(String ufsGanhadoresPremioPrincipal) {
+		this.ufsGanhadoresPremioPrincipal = ufsGanhadoresPremioPrincipal;
 	}
 
 	@Override

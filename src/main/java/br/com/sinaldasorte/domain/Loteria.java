@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -24,7 +23,7 @@ public class Loteria implements Serializable {
 	private String nome;
 	
 	@JsonIgnore
-	@OneToMany(mappedBy = "loteria", cascade = CascadeType.ALL, orphanRemoval=true)
+	@OneToMany(mappedBy = "loteria")
 	private List<Concurso> concursos = new LinkedList<>();
 
 	public Loteria() {}
