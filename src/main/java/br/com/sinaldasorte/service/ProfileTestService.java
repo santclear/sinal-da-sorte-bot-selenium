@@ -39,11 +39,11 @@ public class ProfileTestService {
 			LotofacilPage lotofacilPage = PageFactory.initElements(driver, LotofacilPage.class);
 			
 			WebElement buscaConcurso = driver.findElement(By.id("buscaConcurso"));
-			buscaConcurso.sendKeys("1658");
+			buscaConcurso.sendKeys("1660");
 			
 			WebDriverWait wait = new WebDriverWait(driver, 1000);
 			buscaConcurso.sendKeys(Keys.ENTER);
-			wait.until(ExpectedConditions.textToBePresentInElementLocated(By.xpath("//*[@id='resultados']//*[contains(text(),'Concurso')]"), "1658"));
+			wait.until(ExpectedConditions.textToBePresentInElementLocated(By.xpath("//*[@id='resultados']//*[contains(text(),'Concurso')]"), "1660"));
 			
 			Loteria loteria = loteriaService.encontre(1L);
 			
@@ -57,12 +57,12 @@ public class ProfileTestService {
 			driver.get("http://loterias.caixa.gov.br/wps/portal/loterias/landing/duplasena/");
 			DuplaSenaPage duplaSenaPage = PageFactory.initElements(driver, DuplaSenaPage.class);
 			
-//			WebElement buscaConcurso = driver.findElement(By.id("buscaConcurso"));
-//			buscaConcurso.sendKeys("1630");
-//			
-//			WebDriverWait wait = new WebDriverWait(driver, 1000);
-//			buscaConcurso.sendKeys(Keys.ENTER);
-//			wait.until(ExpectedConditions.textToBePresentInElementLocated(By.xpath("//*[@id='resultados']//*[contains(text(),'Concurso')]"), "1630"));
+			buscaConcurso = driver.findElement(By.id("buscaConcurso"));
+			buscaConcurso.sendKeys("1709");
+			
+			wait = new WebDriverWait(driver, 1000);
+			buscaConcurso.sendKeys(Keys.ENTER);
+			wait.until(ExpectedConditions.textToBePresentInElementLocated(By.xpath("//*[@id='resultados']//*[contains(text(),'Concurso')]"), "1709"));
 			
 			loteria = loteriaService.encontre(6L);
 			

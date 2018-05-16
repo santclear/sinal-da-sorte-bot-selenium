@@ -10,6 +10,7 @@ import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
@@ -133,8 +134,10 @@ public abstract class BasePage {
 				String cidadeStr = ";";
 				if(cidadesUfsStr.length > 1) {
 					cidadeStr = cidadesUfsStr[0].trim();
-					cidadesStr.append(cidadeStr);
-					cidadesStr.append(";");
+					for(int i = 0; i < this.getQtdGanhadoresNaRegiao(cidadeUf); i++) {
+						cidadesStr.append(cidadeStr);
+						cidadesStr.append(";");
+					}
 				}
 			}
 		}
@@ -166,8 +169,10 @@ public abstract class BasePage {
 				} else {
 					ufStr = cidadesUfsStr[1].trim();
 				}
-				ufsStr.append(ufStr);
-				ufsStr.append(";");
+				for(int i = 0; i < this.getQtdGanhadoresNaRegiao(cidadeUf); i++) {
+					ufsStr.append(ufStr);
+					ufsStr.append(";");
+				}
 			}
 		}
 		if(!ufsStr.toString().isEmpty()) {
@@ -175,6 +180,20 @@ public abstract class BasePage {
 		} else {
 			sorteios.add(ufsStr.toString());
 		}
+	}
+	
+	private Integer getQtdGanhadoresNaRegiao(WebElement element) {
+		WebElement descricaoQtdApostas = element.findElement(By.xpath("./ancestor::span[1]//following-sibling::span[2]"));
+		String qtdApostasStr = descricaoQtdApostas.getAttribute("innerText");
+		qtdApostasStr = qtdApostasStr.replaceAll("\\n", "").replaceAll("\\t", "");
+		qtdApostasStr = qtdApostasStr.substring(0, 6);
+		Pattern pattern = Pattern.compile("\\d+");
+		Matcher matcher = pattern.matcher(qtdApostasStr);
+		Integer qtdApostas = null;
+		if (matcher.find()) {
+			qtdApostas = Integer.parseInt(matcher.group());
+		}
+		return qtdApostas;
 	}
 	
 	public Calendar getDataSorteio() {
