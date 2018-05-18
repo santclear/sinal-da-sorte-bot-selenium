@@ -282,8 +282,7 @@ public abstract class BasePage {
 		List<Sorteio> sorteios = new LinkedList<>();
 		Sorteio obj = new Sorteio();
 		obj.setNumerosSorteados(this.getNumerosSorteados().get(0));
-		obj.setCidadesGanhadoresPremioPrincipal(this.getCidades().get(0));
-		obj.setUfsGanhadoresPremioPrincipal(this.getUfs().get(0));
+		
 		obj.setNumero(1);
 		obj.setConcurso(concurso);
 		sorteios.add(obj);
@@ -298,7 +297,11 @@ public abstract class BasePage {
 			obj.setRateio(rateio);
 			obj.setTipoDePremio(String.valueOf(tipoDePremio));
 			obj.setSorteio(sorteios.get(0));
-			if(tipoDePremio == 1) obj.setAcumuladoParaOProximoConcurso(this.getAcumuladoParaOProximoConcurso());
+			if(tipoDePremio == 1) {
+				obj.setAcumuladoParaOProximoConcurso(this.getAcumuladoParaOProximoConcurso());
+				obj.setCidades(this.getCidades().get(0));
+				obj.setUfs(this.getUfs().get(0));
+			}
 			rateios.add(obj);
 			tipoDePremio++;
 		}

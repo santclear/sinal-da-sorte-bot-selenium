@@ -40,9 +40,16 @@ public class Rateio implements Serializable {
 	@Column(nullable = false, length = 45)
 	private String tipoDePremio;
 	
+	private String cidades;
+	
+	private String ufs;
+	
 	public Rateio() {}
 
-	public Rateio(Long id, Sorteio sorteio, BigDecimal rateio, int numeroDeGanhadores, BigDecimal acumuladoParaOProximoConcurso, String tipoDePremio) {
+	public Rateio(
+			Long id, Sorteio sorteio, BigDecimal rateio, 
+			int numeroDeGanhadores, BigDecimal acumuladoParaOProximoConcurso, 
+			String tipoDePremio, String cidades, String ufs) {
 		super();
 		this.id = id;
 		this.sorteio = sorteio;
@@ -50,6 +57,8 @@ public class Rateio implements Serializable {
 		this.numeroDeGanhadores = numeroDeGanhadores;
 		this.acumuladoParaOProximoConcurso = acumuladoParaOProximoConcurso;
 		this.tipoDePremio = tipoDePremio;
+		this.cidades = cidades;
+		this.ufs = ufs;
 	}
 
 	public Long getId() {
@@ -98,6 +107,22 @@ public class Rateio implements Serializable {
 
 	public void setTipoDePremio(String tipoDePremio) {
 		this.tipoDePremio = tipoDePremio;
+	}
+
+	public String getCidades() {
+		return cidades;
+	}
+
+	public void setCidades(String cidades) {
+		this.cidades = cidades;
+	}
+
+	public String getUfs() {
+		return ufs;
+	}
+
+	public void setUfs(String ufs) {
+		this.ufs = ufs;
 	}
 
 	@Override

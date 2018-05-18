@@ -96,8 +96,6 @@ public class DuplaSenaPage extends BasePage {
 	private Sorteio getSorteio(Concurso concurso, Integer numeroSorteio) {
 		Sorteio obj = new Sorteio();
 		obj.setNumerosSorteados(this.getNumerosSorteados().get(numeroSorteio));
-		obj.setCidadesGanhadoresPremioPrincipal(this.getCidades().get(numeroSorteio));
-		obj.setUfsGanhadoresPremioPrincipal(this.getUfs().get(numeroSorteio));
 		obj.setNumero(numeroSorteio + 1);
 		obj.setConcurso(concurso);
 		return obj;
@@ -112,7 +110,11 @@ public class DuplaSenaPage extends BasePage {
 			obj.setRateio(rateio);
 			obj.setTipoDePremio(String.valueOf(tipoDePremio));
 			obj.setSorteio(sorteios.get(numeroSorteio));
-			if(tipoDePremio == 1) obj.setAcumuladoParaOProximoConcurso(this.getAcumuladoParaOProximoConcurso());
+			if(tipoDePremio == 1) {
+				obj.setAcumuladoParaOProximoConcurso(this.getAcumuladoParaOProximoConcurso());
+				obj.setCidades(this.getCidades().get(numeroSorteio));
+				obj.setUfs(this.getUfs().get(numeroSorteio));
+			}
 			rateios.add(obj);
 			tipoDePremio++;
 		}
