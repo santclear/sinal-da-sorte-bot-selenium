@@ -114,6 +114,9 @@ public class DuplaSenaPage extends BasePage {
 				obj.setAcumuladoParaOProximoConcurso(this.getAcumuladoParaOProximoConcurso());
 				obj.setCidades(this.getCidades().get(numeroSorteio));
 				obj.setUfs(this.getUfs().get(numeroSorteio));
+			} else {
+				obj.setCidades(";");
+				obj.setUfs(";");
 			}
 			rateios.add(obj);
 			tipoDePremio++;

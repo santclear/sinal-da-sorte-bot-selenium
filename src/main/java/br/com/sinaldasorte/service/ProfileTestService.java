@@ -20,6 +20,7 @@ import br.com.sinaldasorte.domain.Rateio;
 import br.com.sinaldasorte.domain.Sorteio;
 import br.com.sinaldasorte.pageobject.DuplaSenaPage;
 import br.com.sinaldasorte.pageobject.LotofacilPage;
+import br.com.sinaldasorte.pageobject.LotomaniaPage;
 
 @Service
 public class ProfileTestService {
@@ -34,26 +35,34 @@ public class ProfileTestService {
 		try {
 			System.setProperty("webdriver.chrome.driver", "/home/santclear/webdrivers/chromedriver");
 			driver = new ChromeDriver();
+			WebElement buscaConcurso = null;
+			WebDriverWait wait = null;
+			Loteria loteria = null;
+			Concurso concurso = null;
+			List<Sorteio> sorteios = null;
+			List<Rateio> rateios = null;
 			
+			/* Lotofácil */
 			driver.get("http://loterias.caixa.gov.br/wps/portal/loterias/landing/lotofacil/");
 			LotofacilPage lotofacilPage = PageFactory.initElements(driver, LotofacilPage.class);
 			
-			WebElement buscaConcurso = driver.findElement(By.id("buscaConcurso"));
+			buscaConcurso = driver.findElement(By.id("buscaConcurso"));
 			buscaConcurso.sendKeys("1660");
 			
-			WebDriverWait wait = new WebDriverWait(driver, 1000);
+			wait = new WebDriverWait(driver, 1000);
 			buscaConcurso.sendKeys(Keys.ENTER);
 			wait.until(ExpectedConditions.textToBePresentInElementLocated(By.xpath("//*[@id='resultados']//*[contains(text(),'Concurso')]"), "1660"));
 			
-			Loteria loteria = loteriaService.encontre(1L);
+			loteria = loteriaService.encontre(1L);
 			
-			Concurso concurso = lotofacilPage.paraConcursoEntity(loteria);
+			concurso = lotofacilPage.paraConcursoEntity(loteria);
 			
-			List<Sorteio> sorteios = lotofacilPage.paraSorteiosEntityList(concurso);
+			sorteios = lotofacilPage.paraSorteiosEntityList(concurso);
 			
-			List<Rateio> rateios = lotofacilPage.paraRateiosEntityList(sorteios);
+			rateios = lotofacilPage.paraRateiosEntityList(sorteios);
 			rateioService.insiraTodos(rateios);
 			
+			/* Duplasena */
 			driver.get("http://loterias.caixa.gov.br/wps/portal/loterias/landing/duplasena/");
 			DuplaSenaPage duplaSenaPage = PageFactory.initElements(driver, DuplaSenaPage.class);
 			
@@ -73,6 +82,26 @@ public class ProfileTestService {
 			rateios = new LinkedList<Rateio>();
 			rateios.addAll(duplaSenaPage.paraRateiosEntityList(sorteios, 0));
 			rateios.addAll(duplaSenaPage.paraRateiosEntityList(sorteios, 1));
+			rateioService.insiraTodos(rateios);
+			
+			/* Lotomania */
+			driver.get("http://loterias.caixa.gov.br/wps/portal/loterias/landing/lotomania/");
+			LotomaniaPage lotomaniaPage = PageFactory.initElements(driver, LotomaniaPage.class);
+			
+			buscaConcurso = driver.findElement(By.id("buscaConcurso"));
+			buscaConcurso.sendKeys("1863");
+			
+			wait = new WebDriverWait(driver, 1000);
+			buscaConcurso.sendKeys(Keys.ENTER);
+			wait.until(ExpectedConditions.textToBePresentInElementLocated(By.xpath("//*[@id='resultados']//*[contains(text(),'Concurso')]"), "1863"));
+			
+			loteria = loteriaService.encontre(4L);
+			
+			concurso = lotomaniaPage.paraConcursoEntity(loteria);
+			
+			sorteios = lotomaniaPage.paraSorteiosEntityList(concurso);
+			
+			rateios = lotomaniaPage.paraRateiosEntityList(sorteios, driver);
 			rateioService.insiraTodos(rateios);
 			
 		} finally {
