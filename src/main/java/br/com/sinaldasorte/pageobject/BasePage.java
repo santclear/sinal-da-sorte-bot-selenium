@@ -11,6 +11,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
@@ -74,7 +75,15 @@ public abstract class BasePage {
 	}
 	
 	public BigDecimal getAcumuladoParaOProximoConcurso() {
-		String texto = acumuladoParaOProximoConcurso.getText();
+		try {
+			return this.getAcumuladoParaOProximoConcurso(acumuladoParaOProximoConcurso);
+		} catch(NoSuchElementException e) {
+			return new BigDecimal(0);
+		}
+	}
+	
+	public BigDecimal getAcumuladoParaOProximoConcurso(WebElement element) {
+		String texto = element.getText();
 		Pattern pattern = Pattern.compile("\\d+.+");
 		Matcher matcher = pattern.matcher(texto);
 		if (matcher.find()) {
@@ -134,7 +143,8 @@ public abstract class BasePage {
 				String cidadeStr = ";";
 				if(cidadesUfsStr.length > 1) {
 					cidadeStr = cidadesUfsStr[0].trim();
-					for(int i = 0; i < this.getQtdGanhadoresNaRegiao(cidadeUf); i++) {
+					WebElement descricaoQtdApostas = cidadeUf.findElement(By.xpath("./ancestor::span[1]//following-sibling::span[2]"));
+					for(int i = 0; i < this.getQtdGanhadoresNaRegiao(descricaoQtdApostas); i++) {
 						cidadesStr.append(cidadeStr);
 						cidadesStr.append(";");
 					}
@@ -169,7 +179,8 @@ public abstract class BasePage {
 				} else {
 					ufStr = cidadesUfsStr[1].trim();
 				}
-				for(int i = 0; i < this.getQtdGanhadoresNaRegiao(cidadeUf); i++) {
+				WebElement descricaoQtdApostas = cidadeUf.findElement(By.xpath("./ancestor::span[1]//following-sibling::span[2]"));
+				for(int i = 0; i < this.getQtdGanhadoresNaRegiao(descricaoQtdApostas); i++) {
 					ufsStr.append(ufStr);
 					ufsStr.append(";");
 				}
@@ -182,8 +193,7 @@ public abstract class BasePage {
 		}
 	}
 	
-	private Integer getQtdGanhadoresNaRegiao(WebElement element) {
-		WebElement descricaoQtdApostas = element.findElement(By.xpath("./ancestor::span[1]//following-sibling::span[2]"));
+	protected Integer getQtdGanhadoresNaRegiao(WebElement descricaoQtdApostas) {
 		String qtdApostasStr = descricaoQtdApostas.getAttribute("innerText");
 		qtdApostasStr = qtdApostasStr.replaceAll("\\n", "").replaceAll("\\t", "");
 		qtdApostasStr = qtdApostasStr.substring(0, 6);

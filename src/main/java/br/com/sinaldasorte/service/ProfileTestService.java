@@ -21,6 +21,7 @@ import br.com.sinaldasorte.domain.Sorteio;
 import br.com.sinaldasorte.pageobject.DuplaSenaPage;
 import br.com.sinaldasorte.pageobject.LotofacilPage;
 import br.com.sinaldasorte.pageobject.LotomaniaPage;
+import br.com.sinaldasorte.pageobject.TimemaniaPage;
 
 @Service
 public class ProfileTestService {
@@ -101,7 +102,27 @@ public class ProfileTestService {
 			
 			sorteios = lotomaniaPage.paraSorteiosEntityList(concurso);
 			
-			rateios = lotomaniaPage.paraRateiosEntityList(sorteios, driver);
+			rateios = lotomaniaPage.paraRateiosEntityList(sorteios);
+			rateioService.insiraTodos(rateios);
+			
+			/* Timemania */
+			driver.get("http://loterias.caixa.gov.br/wps/portal/loterias/landing/timemania/");
+			TimemaniaPage timemaniaPage = PageFactory.initElements(driver, TimemaniaPage.class);
+			
+			buscaConcurso = driver.findElement(By.id("buscaConcurso"));
+			buscaConcurso.sendKeys("1140");
+			
+			wait = new WebDriverWait(driver, 1000);
+			buscaConcurso.sendKeys(Keys.ENTER);
+			wait.until(ExpectedConditions.textToBePresentInElementLocated(By.xpath("//*[@id='resultados']//*[contains(text(),'Concurso')]"), "1140"));
+			
+			loteria = loteriaService.encontre(5L);
+			
+			concurso = timemaniaPage.paraConcursoEntity(loteria);
+			
+			sorteios = timemaniaPage.paraSorteiosEntityList(concurso);
+			
+			rateios = timemaniaPage.paraRateiosEntityList(sorteios);
 			rateioService.insiraTodos(rateios);
 			
 		} finally {

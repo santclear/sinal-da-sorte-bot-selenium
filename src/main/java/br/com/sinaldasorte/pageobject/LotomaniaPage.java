@@ -3,11 +3,7 @@ package br.com.sinaldasorte.pageobject;
 import java.math.BigDecimal;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
-import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
@@ -63,23 +59,12 @@ public class LotomaniaPage extends BasePage {
 		return sorteios;
 	}
 	
-	public BigDecimal getAcumuladoParaOProximoConcurso(WebDriver driver) {
-		try {
-			String texto = acumuladoParaOProximoConcurso.getText();
-			Pattern pattern = Pattern.compile("\\d+.+");
-			Matcher matcher = pattern.matcher(texto);
-			if (matcher.find()) {
-				texto = matcher.group().replaceAll("\\.", "").replaceAll(",", "\\.");
-				BigDecimal numero = new BigDecimal(texto);
-				return numero;
-			} else {
-				return new BigDecimal(0);
-			}
-		} catch(NoSuchElementException e) {
-			return new BigDecimal(0);
-		}
+	@Override
+	public BigDecimal getAcumuladoParaOProximoConcurso() {
+		return super.getAcumuladoParaOProximoConcurso(acumuladoParaOProximoConcurso);
 	}
 	
+	@Override
 	public Concurso paraConcursoEntity(Loteria loteria) {
 		Concurso obj = new Concurso();
 		obj.setArrecadacaoTotal(this.getArrecadacaoTotal());
@@ -90,7 +75,7 @@ public class LotomaniaPage extends BasePage {
 		return obj;
 	}
 	
-	public List<Rateio> paraRateiosEntityList(List<Sorteio> sorteios, WebDriver driver) {
+	public List<Rateio> paraRateiosEntityList(List<Sorteio> sorteios) {
 		List<Rateio> rateios = new LinkedList<>();
 		int tipoDePremio = 1;
 		List<BigDecimal> rateiosList = super.getRateios().get(0);
@@ -101,7 +86,7 @@ public class LotomaniaPage extends BasePage {
 			obj.setSorteio(sorteios.get(0));
 			switch(tipoDePremio) {
 				case 1:
-					obj.setAcumuladoParaOProximoConcurso(getAcumuladoParaOProximoConcurso(driver));
+					obj.setAcumuladoParaOProximoConcurso(getAcumuladoParaOProximoConcurso());
 					obj.setCidades(this.getCidades().get(0));
 					obj.setUfs(this.getUfs().get(0));
 					break;
