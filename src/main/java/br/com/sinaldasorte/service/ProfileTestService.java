@@ -21,6 +21,8 @@ import br.com.sinaldasorte.domain.Sorteio;
 import br.com.sinaldasorte.pageobject.DuplaSenaPage;
 import br.com.sinaldasorte.pageobject.LotofacilPage;
 import br.com.sinaldasorte.pageobject.LotomaniaPage;
+import br.com.sinaldasorte.pageobject.MegaSenaPage;
+import br.com.sinaldasorte.pageobject.QuinaPage;
 import br.com.sinaldasorte.pageobject.TimemaniaPage;
 
 @Service
@@ -47,84 +49,141 @@ public class ProfileTestService {
 			driver.get("http://loterias.caixa.gov.br/wps/portal/loterias/landing/lotofacil/");
 			LotofacilPage lotofacilPage = PageFactory.initElements(driver, LotofacilPage.class);
 			
-			buscaConcurso = driver.findElement(By.id("buscaConcurso"));
-			buscaConcurso.sendKeys("1660");
-			
-			wait = new WebDriverWait(driver, 1000);
-			buscaConcurso.sendKeys(Keys.ENTER);
-			wait.until(ExpectedConditions.textToBePresentInElementLocated(By.xpath("//*[@id='resultados']//*[contains(text(),'Concurso')]"), "1660"));
-			
-			loteria = loteriaService.encontre(1L);
-			
-			concurso = lotofacilPage.paraConcursoEntity(loteria);
-			
-			sorteios = lotofacilPage.paraSorteiosEntityList(concurso);
-			
-			rateios = lotofacilPage.paraRateiosEntityList(sorteios);
-			rateioService.insiraTodos(rateios);
+			for(Integer i = 1565; i < 1665; i++) {
+				buscaConcurso = driver.findElement(By.id("buscaConcurso"));
+				buscaConcurso.sendKeys(i.toString());//1660
+				
+				wait = new WebDriverWait(driver, 1000);
+				buscaConcurso.sendKeys(Keys.ENTER);
+				wait.until(ExpectedConditions.textToBePresentInElementLocated(By.xpath("//*[@id='resultados']//*[contains(text(),'Concurso')]"), i.toString()));
+				
+				loteria = loteriaService.encontre(1L);
+				
+				concurso = lotofacilPage.paraConcursoEntity(loteria);
+				
+				sorteios = lotofacilPage.paraSorteiosEntityList(concurso);
+				
+				rateios = lotofacilPage.paraRateiosEntityList(sorteios);
+				rateioService.insiraTodos(rateios);
+				buscaConcurso.clear();
+			}
 			
 			/* Duplasena */
 			driver.get("http://loterias.caixa.gov.br/wps/portal/loterias/landing/duplasena/");
 			DuplaSenaPage duplaSenaPage = PageFactory.initElements(driver, DuplaSenaPage.class);
 			
-			buscaConcurso = driver.findElement(By.id("buscaConcurso"));
-			buscaConcurso.sendKeys("1709");
-			
-			wait = new WebDriverWait(driver, 1000);
-			buscaConcurso.sendKeys(Keys.ENTER);
-			wait.until(ExpectedConditions.textToBePresentInElementLocated(By.xpath("//*[@id='resultados']//*[contains(text(),'Concurso')]"), "1709"));
-			
-			loteria = loteriaService.encontre(6L);
-			
-			concurso = duplaSenaPage.paraConcursoEntity(loteria);
-			
-			sorteios = duplaSenaPage.paraSorteiosEntityList(concurso);
+			for(Integer i = 1691; i < 1791; i++) {
+				buscaConcurso = driver.findElement(By.id("buscaConcurso"));
+				buscaConcurso.sendKeys(i.toString());//1709
 				
-			rateios = new LinkedList<Rateio>();
-			rateios.addAll(duplaSenaPage.paraRateiosEntityList(sorteios, 0));
-			rateios.addAll(duplaSenaPage.paraRateiosEntityList(sorteios, 1));
-			rateioService.insiraTodos(rateios);
+				wait = new WebDriverWait(driver, 1000);
+				buscaConcurso.sendKeys(Keys.ENTER);
+				wait.until(ExpectedConditions.textToBePresentInElementLocated(By.xpath("//*[@id='resultados']//*[contains(text(),'Concurso')]"), i.toString()));
+				
+				loteria = loteriaService.encontre(6L);
+				
+				concurso = duplaSenaPage.paraConcursoEntity(loteria);
+				
+				sorteios = duplaSenaPage.paraSorteiosEntityList(concurso);
+					
+				rateios = new LinkedList<Rateio>();
+				rateios.addAll(duplaSenaPage.paraRateiosEntityList(sorteios, 0));
+				rateios.addAll(duplaSenaPage.paraRateiosEntityList(sorteios, 1));
+				rateioService.insiraTodos(rateios);
+				buscaConcurso.clear();
+			}
 			
 			/* Lotomania */
 			driver.get("http://loterias.caixa.gov.br/wps/portal/loterias/landing/lotomania/");
 			LotomaniaPage lotomaniaPage = PageFactory.initElements(driver, LotomaniaPage.class);
 			
-			buscaConcurso = driver.findElement(By.id("buscaConcurso"));
-			buscaConcurso.sendKeys("1863");
-			
-			wait = new WebDriverWait(driver, 1000);
-			buscaConcurso.sendKeys(Keys.ENTER);
-			wait.until(ExpectedConditions.textToBePresentInElementLocated(By.xpath("//*[@id='resultados']//*[contains(text(),'Concurso')]"), "1863"));
-			
-			loteria = loteriaService.encontre(4L);
-			
-			concurso = lotomaniaPage.paraConcursoEntity(loteria);
-			
-			sorteios = lotomaniaPage.paraSorteiosEntityList(concurso);
-			
-			rateios = lotomaniaPage.paraRateiosEntityList(sorteios);
-			rateioService.insiraTodos(rateios);
+			for(Integer i = 1768; i < 1868; i++) {
+				buscaConcurso = driver.findElement(By.id("buscaConcurso"));
+				buscaConcurso.sendKeys(i.toString());//1863
+				
+				wait = new WebDriverWait(driver, 1000);
+				buscaConcurso.sendKeys(Keys.ENTER);
+				wait.until(ExpectedConditions.textToBePresentInElementLocated(By.xpath("//*[@id='resultados']//*[contains(text(),'Concurso')]"), i.toString()));
+				
+				loteria = loteriaService.encontre(4L);
+				
+				concurso = lotomaniaPage.paraConcursoEntity(loteria);
+				
+				sorteios = lotomaniaPage.paraSorteiosEntityList(concurso);
+				
+				rateios = lotomaniaPage.paraRateiosEntityList(sorteios);
+				rateioService.insiraTodos(rateios);
+				buscaConcurso.clear();
+			}
 			
 			/* Timemania */
 			driver.get("http://loterias.caixa.gov.br/wps/portal/loterias/landing/timemania/");
 			TimemaniaPage timemaniaPage = PageFactory.initElements(driver, TimemaniaPage.class);
 			
-			buscaConcurso = driver.findElement(By.id("buscaConcurso"));
-			buscaConcurso.sendKeys("1140");
+			for(Integer i = 1083; i < 1183; i++) {
+				buscaConcurso = driver.findElement(By.id("buscaConcurso"));
+				buscaConcurso.sendKeys(i.toString());//1140
+				
+				wait = new WebDriverWait(driver, 1000);
+				buscaConcurso.sendKeys(Keys.ENTER);
+				wait.until(ExpectedConditions.textToBePresentInElementLocated(By.xpath("//*[@id='resultados']//*[contains(text(),'Concurso')]"), i.toString()));
+				
+				loteria = loteriaService.encontre(5L);
+				
+				concurso = timemaniaPage.paraConcursoEntity(loteria);
+				
+				sorteios = timemaniaPage.paraSorteiosEntityList(concurso);
+				
+				rateios = timemaniaPage.paraRateiosEntityList(sorteios);
+				rateioService.insiraTodos(rateios);
+				buscaConcurso.clear();
+			}
+
+			/* Mega-Sena */
+			driver.get("http://loterias.caixa.gov.br/wps/portal/loterias/landing/megasena/");
+			MegaSenaPage megaSenaPage = PageFactory.initElements(driver, MegaSenaPage.class);
 			
-			wait = new WebDriverWait(driver, 1000);
-			buscaConcurso.sendKeys(Keys.ENTER);
-			wait.until(ExpectedConditions.textToBePresentInElementLocated(By.xpath("//*[@id='resultados']//*[contains(text(),'Concurso')]"), "1140"));
+			for(Integer i = 2039; i < 2042; i++) {
+				buscaConcurso = driver.findElement(By.id("buscaConcurso"));
+				buscaConcurso.sendKeys(i.toString());
+				
+				wait = new WebDriverWait(driver, 1000);
+				buscaConcurso.sendKeys(Keys.ENTER);
+				wait.until(ExpectedConditions.textToBePresentInElementLocated(By.xpath("//*[@id='resultados']//*[contains(text(),'Concurso')]"), i.toString()));
+				
+				loteria = loteriaService.encontre(2L);
+				
+				concurso = megaSenaPage.paraConcursoEntity(loteria);
+				
+				sorteios = megaSenaPage.paraSorteiosEntityList(concurso);
+				
+				rateios = megaSenaPage.paraRateiosEntityList(sorteios);
+				rateioService.insiraTodos(rateios);
+				buscaConcurso.clear();
+			}
 			
-			loteria = loteriaService.encontre(5L);
+			/* Quina */
+			driver.get("http://loterias.caixa.gov.br/wps/portal/loterias/landing/quina/");
+			QuinaPage quinaPage = PageFactory.initElements(driver, QuinaPage.class);
 			
-			concurso = timemaniaPage.paraConcursoEntity(loteria);
-			
-			sorteios = timemaniaPage.paraSorteiosEntityList(concurso);
-			
-			rateios = timemaniaPage.paraRateiosEntityList(sorteios);
-			rateioService.insiraTodos(rateios);
-			
+			for(Integer i = 4682; i < 4685; i++) {
+				buscaConcurso = driver.findElement(By.id("buscaConcurso"));
+				buscaConcurso.sendKeys(i.toString());
+				
+				wait = new WebDriverWait(driver, 1000);
+				buscaConcurso.sendKeys(Keys.ENTER);
+				wait.until(ExpectedConditions.textToBePresentInElementLocated(By.xpath("//*[@id='resultados']//*[contains(text(),'Concurso')]"), i.toString()));
+				
+				loteria = loteriaService.encontre(3L);
+				
+				concurso = quinaPage.paraConcursoEntity(loteria);
+				
+				sorteios = quinaPage.paraSorteiosEntityList(concurso);
+				
+				rateios = quinaPage.paraRateiosEntityList(sorteios);
+				rateioService.insiraTodos(rateios);
+				buscaConcurso.clear();
+			}
 		} finally {
 			driver.close();
 		}	

@@ -40,8 +40,10 @@ public class Rateio implements Serializable {
 	@Column(nullable = false, length = 45)
 	private String tipoDePremio;
 	
+	@Column(length = 10000)
 	private String cidades;
 	
+	@Column(length = 10000)
 	private String ufs;
 	
 	public Rateio() {}
