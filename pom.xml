@@ -4,11 +4,11 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>br.com.sinaldasorte</groupId>
-	<artifactId>sinal-da-sorte-e2e-test</artifactId>
+	<artifactId>sinal-da-sorte-bot-selenium</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
-	<name>sinal-da-sorte-e2e-test</name>
+	<name>sinal-da-sorte-bot-selenium</name>
 	<description>Bot do sistema Sinal da Sorte</description>
 
 	<parent>
@@ -74,7 +74,7 @@
 	</dependencies>
 
 	<build>
-		<finalName>sinal-da-sorte-e2e-test</finalName>
+		<finalName>sinal-da-sorte-bot-selenium</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
