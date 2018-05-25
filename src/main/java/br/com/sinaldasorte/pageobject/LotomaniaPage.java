@@ -94,9 +94,6 @@ public class LotomaniaPage extends BasePage {
 					obj.setCidades(this.getCidades().get(1));
 					obj.setUfs(this.getUfs().get(1));
 					break;
-				default:
-					obj.setCidades(";");
-					obj.setUfs(";");
 					
 			}
 			rateios.add(obj);

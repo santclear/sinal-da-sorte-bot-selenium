@@ -311,9 +311,6 @@ public abstract class BasePage {
 				obj.setAcumuladoParaOProximoConcurso(this.getAcumuladoParaOProximoConcurso());
 				obj.setCidades(this.getCidades().get(0));
 				obj.setUfs(this.getUfs().get(0));
-			} else {
-				obj.setCidades(";");
-				obj.setUfs(";");
 			}
 			rateios.add(obj);
 			tipoDePremio++;
