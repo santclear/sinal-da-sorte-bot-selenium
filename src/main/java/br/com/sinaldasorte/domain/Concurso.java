@@ -43,10 +43,10 @@ public class Concurso implements Serializable {
 	@Column(precision = 15, scale = 2)
 	private BigDecimal arrecadacaoTotal;
 	
-	@Column(length = 2048)
+	@Column(length = 50)
 	private String cidade;
 	
-	@Column(length = 2048)
+	@Column(length = 2)
 	private String uf;
 	
 	@Column(precision = 15, scale = 2)

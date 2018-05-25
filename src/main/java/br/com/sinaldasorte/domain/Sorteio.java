@@ -41,6 +41,7 @@ public class Sorteio implements Serializable {
 	public Sorteio() {}
 	
 	public Sorteio(Long id, Concurso concurso, int numero, String numerosSorteados) {
+		super();
 		this.id = id;
 		this.concurso = concurso;
 		this.numero = numero;
