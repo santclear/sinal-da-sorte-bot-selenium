@@ -8,46 +8,46 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
+import br.com.sinaldasorte.domain.Concurso;
+import br.com.sinaldasorte.domain.Loteria;
 import br.com.sinaldasorte.domain.Rateio;
 import br.com.sinaldasorte.domain.Sorteio;
 
-public class MegaSenaPage extends BasePage {
+public class DiaDeSortePage extends BasePage {
 	
-	@FindBy(xpath="//*[@class='numbers megasena']//li")
+	@FindBy(xpath="//*[@class='numbers diaDeSorte']//li|//p[contains(text(), 'Mês da Sorte:')]//following-sibling::span[1]")
 	private List<WebElement> numerosSorteados;
-	
-	@FindBy(xpath="//*[contains(text(),'Acumulado próximo concurso')]//following-sibling::*[contains(text(),'R$')]")
-	private WebElement acumuladoParaOProximoConcurso;
-	
+
+	// Encontre o elemento que tem o texto 'Detalhamento', a partir dele encontre o elemento irmão 'p' que tenha um elemento filho 'strong'
 	@FindBy(xpath="//h3[contains(text(),'Detalhamento')]//following-sibling::p//span[contains(@ng-show,'regiao.sgUf')]")
 	private List<WebElement> cidadesUfs;
+	
+	@FindBy(xpath="//*[contains(text(),'Acumulado próximo')]//following-sibling::*[contains(text(),'R$')]")
+	private WebElement acumuladoParaOProximoConcurso;
 	
 	@FindBy(xpath=""
 			+ "//h3[contains(text(),'Premiação')]//following-sibling::p[1]"
 			+ "|//h3[contains(text(),'Premiação')]//following-sibling::p[2]"
-			+ "|//h3[contains(text(),'Premiação')]//following-sibling::p[3]")
+			+ "|//h3[contains(text(),'Premiação')]//following-sibling::p[3]"
+			+ "|//h3[contains(text(),'Premiação')]//following-sibling::p[4]"
+			+ "|//h3[contains(text(),'Premiação')]//following-sibling::p[5]")
 	private List<WebElement> rateios;
 	
 	@Override
 	public List<String> getNumerosSorteados() {
 		List<String> sorteios = new LinkedList<>();
 		
-		super.addNumerosSorteados(sorteios, this.numerosSorteados, 0, 6);
-
+		super.addNumerosSorteados(sorteios, this.numerosSorteados, 0, 8);
+		
 		return sorteios;
 	}
 	
 	@Override
 	public BigDecimal getAcumuladoParaOProximoConcurso() {
-		try {
-			return super.getAcumuladoParaOProximoConcurso(acumuladoParaOProximoConcurso);
-		} catch(NoSuchElementException e) {
-			return new BigDecimal(0);
-		}
+		return super.getAcumuladoParaOProximoConcurso(acumuladoParaOProximoConcurso);
 	}
 	
 	@Override
@@ -55,6 +55,15 @@ public class MegaSenaPage extends BasePage {
 		List<String> sorteios = new LinkedList<>();
 		
 		this.addCidades(sorteios, cidadesUfs);
+		
+		return sorteios;
+	}
+	
+	@Override
+	public List<String> getUfs() {
+		List<String> sorteios = new LinkedList<>();
+		
+		this.addUfs(sorteios, cidadesUfs);
 		
 		return sorteios;
 	}
@@ -84,15 +93,6 @@ public class MegaSenaPage extends BasePage {
 //			sorteios.add(cidadesStr.toString());
 			sorteios.add(null);
 		}
-	}
-	
-	@Override
-	public List<String> getUfs() {
-		List<String> sorteios = new LinkedList<>();
-		
-		this.addUfs(sorteios, cidadesUfs);
-		
-		return sorteios;
 	}
 	
 	@Override
@@ -136,6 +136,43 @@ public class MegaSenaPage extends BasePage {
 			}
 		}
 		return qtdApostas;
+	}
+	
+	@Override
+	public Concurso paraConcursoEntity(Loteria loteria) {
+		Concurso obj = new Concurso();
+		obj.setArrecadacaoTotal(this.getArrecadacaoTotal());
+		obj.setEstimativaDePremioParaOProximoConcurso(this.getEstimativaDePremioParaOProximoConcurso());
+		obj.setDataDoSorteio(this.getDataSorteio());
+		obj.setNumero(this.getConcurso());
+		obj.setLoteria(loteria);
+		return obj;
+	}
+	
+	@Override
+	public List<List<BigDecimal>> getRateios() {
+		List<List<BigDecimal>> sorteios = new LinkedList<>();
+		
+		this.addRateios(sorteios, rateios);
+		
+		return sorteios;
+	}
+	
+	@Override
+	public void addRateios(List<List<BigDecimal>> sorteios, List<WebElement> rateios) {
+		LinkedList<BigDecimal> rateiosBd = new LinkedList<>();
+		for(WebElement rateio: rateios) {
+			String texto = rateio.getText();
+			Pattern pattern = Pattern.compile("(R\\$\\s[0-9\\.\\,]+)|(\\wão\\s\\wouve)");
+			Matcher matcher = pattern.matcher(texto);
+			if (matcher.find()) {
+				texto = matcher.group().replaceAll("\\.", "").replaceAll(",", "\\.").replace("R$", "").trim();
+				texto = texto.toLowerCase();
+				BigDecimal rateioBd = Objects.deepEquals(texto, "não houve")?new BigDecimal(0):new BigDecimal(texto);
+				rateiosBd.add(rateioBd);
+			}
+		}
+		sorteios.add(rateiosBd);
 	}
 	
 	@Override

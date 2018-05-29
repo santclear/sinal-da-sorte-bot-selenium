@@ -90,8 +90,9 @@ public class TimemaniaPage extends BasePage {
 		if(!cidadesStr.toString().isEmpty()) {
 			sorteios.add(cidadesStr.toString().substring(0, cidadesStr.toString().length() - 1));
 		} else {
-			cidadesStr.append(";");
-			sorteios.add(cidadesStr.toString());
+//			cidadesStr.append(";");
+//			sorteios.add(cidadesStr.toString());
+			sorteios.add(null);
 		}
 	}
 	
@@ -117,7 +118,8 @@ public class TimemaniaPage extends BasePage {
 		if(!ufsStr.toString().isEmpty()) {
 			sorteios.add(ufsStr.toString().substring(0, ufsStr.toString().length() - 1));
 		} else {
-			sorteios.add(ufsStr.toString());
+//			sorteios.add(ufsStr.toString());
+			sorteios.add(null);
 		}
 	}
 	

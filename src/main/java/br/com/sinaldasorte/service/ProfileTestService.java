@@ -18,6 +18,7 @@ import br.com.sinaldasorte.domain.Concurso;
 import br.com.sinaldasorte.domain.Loteria;
 import br.com.sinaldasorte.domain.Rateio;
 import br.com.sinaldasorte.domain.Sorteio;
+import br.com.sinaldasorte.pageobject.DiaDeSortePage;
 import br.com.sinaldasorte.pageobject.DuplaSenaPage;
 import br.com.sinaldasorte.pageobject.LotofacilPage;
 import br.com.sinaldasorte.pageobject.LotomaniaPage;
@@ -49,7 +50,7 @@ public class ProfileTestService {
 			driver.get("http://loterias.caixa.gov.br/wps/portal/loterias/landing/lotofacil/");
 			LotofacilPage lotofacilPage = PageFactory.initElements(driver, LotofacilPage.class);
 			
-			for(Integer i = 1565; i < 1665; i++) {
+			for(Integer i = 1645; i < 1665; i++) {
 				buscaConcurso = driver.findElement(By.id("buscaConcurso"));
 				buscaConcurso.sendKeys(i.toString());//1660
 				
@@ -72,7 +73,7 @@ public class ProfileTestService {
 			driver.get("http://loterias.caixa.gov.br/wps/portal/loterias/landing/duplasena/");
 			DuplaSenaPage duplaSenaPage = PageFactory.initElements(driver, DuplaSenaPage.class);
 			
-			for(Integer i = 1691; i < 1791; i++) {
+			for(Integer i = 1771; i < 1791; i++) {
 				buscaConcurso = driver.findElement(By.id("buscaConcurso"));
 				buscaConcurso.sendKeys(i.toString());//1709
 				
@@ -97,7 +98,7 @@ public class ProfileTestService {
 			driver.get("http://loterias.caixa.gov.br/wps/portal/loterias/landing/lotomania/");
 			LotomaniaPage lotomaniaPage = PageFactory.initElements(driver, LotomaniaPage.class);
 			
-			for(Integer i = 1768; i < 1868; i++) {
+			for(Integer i = 1848; i < 1868; i++) {
 				buscaConcurso = driver.findElement(By.id("buscaConcurso"));
 				buscaConcurso.sendKeys(i.toString());//1863
 				
@@ -120,7 +121,7 @@ public class ProfileTestService {
 			driver.get("http://loterias.caixa.gov.br/wps/portal/loterias/landing/timemania/");
 			TimemaniaPage timemaniaPage = PageFactory.initElements(driver, TimemaniaPage.class);
 			
-			for(Integer i = 1083; i < 1183; i++) {
+			for(Integer i = 1163; i < 1183; i++) {
 				buscaConcurso = driver.findElement(By.id("buscaConcurso"));
 				buscaConcurso.sendKeys(i.toString());//1140
 				
@@ -143,7 +144,7 @@ public class ProfileTestService {
 			driver.get("http://loterias.caixa.gov.br/wps/portal/loterias/landing/megasena/");
 			MegaSenaPage megaSenaPage = PageFactory.initElements(driver, MegaSenaPage.class);
 			
-			for(Integer i = 2039; i < 2042; i++) {
+			for(Integer i = 2022; i < 2042; i++) {
 				buscaConcurso = driver.findElement(By.id("buscaConcurso"));
 				buscaConcurso.sendKeys(i.toString());
 				
@@ -166,7 +167,7 @@ public class ProfileTestService {
 			driver.get("http://loterias.caixa.gov.br/wps/portal/loterias/landing/quina/");
 			QuinaPage quinaPage = PageFactory.initElements(driver, QuinaPage.class);
 			
-			for(Integer i = 4682; i < 4685; i++) {
+			for(Integer i = 4665; i < 4685; i++) {
 				buscaConcurso = driver.findElement(By.id("buscaConcurso"));
 				buscaConcurso.sendKeys(i.toString());
 				
@@ -181,6 +182,29 @@ public class ProfileTestService {
 				sorteios = quinaPage.paraSorteiosEntityList(concurso);
 				
 				rateios = quinaPage.paraRateiosEntityList(sorteios);
+				rateioService.insiraTodos(rateios);
+				buscaConcurso.clear();
+			}
+			
+			/* Dia de Sorte */
+			driver.get("http://loterias.caixa.gov.br/wps/portal/loterias/landing/diadesorte/");
+			DiaDeSortePage diaDeSorte = PageFactory.initElements(driver, DiaDeSortePage.class);
+			
+			for(Integer i = 1; i < 5; i++) {
+				buscaConcurso = driver.findElement(By.id("buscaConcurso"));
+				buscaConcurso.sendKeys(i.toString());
+				
+				wait = new WebDriverWait(driver, 250);
+				buscaConcurso.sendKeys(Keys.ENTER);
+				wait.until(ExpectedConditions.textToBePresentInElementLocated(By.xpath("//*[@id='resultados']//*[contains(text(),'Concurso')]"), i.toString()));
+				
+				loteria = loteriaService.encontre(3L);
+				
+				concurso = diaDeSorte.paraConcursoEntity(loteria);
+				
+				sorteios = diaDeSorte.paraSorteiosEntityList(concurso);
+				
+				rateios = diaDeSorte.paraRateiosEntityList(sorteios);
 				rateioService.insiraTodos(rateios);
 				buscaConcurso.clear();
 			}

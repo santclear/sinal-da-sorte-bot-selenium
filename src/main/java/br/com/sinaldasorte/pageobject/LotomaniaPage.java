@@ -40,9 +40,11 @@ public class LotomaniaPage extends BasePage {
 		List<String> sorteios = new LinkedList<>();
 		
 		if(!cidadesUfs20.isEmpty()) super.addCidades(sorteios, cidadesUfs20);
-		else sorteios.add(";");
+//		else sorteios.add(";");
+		else sorteios.add(null);
 		if(!cidadesUfs0.isEmpty()) super.addCidades(sorteios, cidadesUfs0);
-		else sorteios.add(";");
+//		else sorteios.add(";");
+		else sorteios.add(null);
 		
 		return sorteios;
 	}
@@ -52,9 +54,11 @@ public class LotomaniaPage extends BasePage {
 		List<String> sorteios = new LinkedList<>();
 		
 		if(!cidadesUfs20.isEmpty()) super.addUfs(sorteios, cidadesUfs20);
-		else sorteios.add(";");
+//		else sorteios.add(";");
+		else sorteios.add(null);
 		if(!cidadesUfs0.isEmpty()) super.addUfs(sorteios, cidadesUfs0);
-		else sorteios.add(";");
+//		else sorteios.add(";");
+		else sorteios.add(null);
 		
 		return sorteios;
 	}
