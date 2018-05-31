@@ -44,10 +44,8 @@ public class DuplaSenaPage extends BasePage {
 		List<String> sorteios = new LinkedList<>();
 		
 		if(!cidadesUfs1.isEmpty()) super.addCidades(sorteios, cidadesUfs1);
-//		else sorteios.add(";");
 		else sorteios.add(null);
 		if(!cidadesUfs2.isEmpty()) super.addCidades(sorteios, cidadesUfs2);
-//		else sorteios.add(";");
 		else sorteios.add(null);
 		
 		return sorteios;
@@ -58,10 +56,8 @@ public class DuplaSenaPage extends BasePage {
 		List<String> sorteios = new LinkedList<>();
 		
 		if(!cidadesUfs1.isEmpty()) super.addUfs(sorteios, cidadesUfs1);
-//		else sorteios.add(";");
 		else sorteios.add(null);
 		if(!cidadesUfs2.isEmpty()) super.addUfs(sorteios, cidadesUfs2);
-//		else sorteios.add(";");
 		else sorteios.add(null);
 		
 		return sorteios;

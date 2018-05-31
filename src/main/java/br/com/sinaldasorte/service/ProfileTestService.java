@@ -17,7 +17,7 @@ import br.com.sinaldasorte.domain.Concurso;
 import br.com.sinaldasorte.domain.Loteria;
 import br.com.sinaldasorte.domain.Rateio;
 import br.com.sinaldasorte.domain.Sorteio;
-import br.com.sinaldasorte.pageobject.LotofacilPage;
+import br.com.sinaldasorte.pageobject.LotomaniaPage;
 
 @Service
 public class ProfileTestService {
@@ -40,54 +40,65 @@ public class ProfileTestService {
 			Concurso concurso = null;
 			List<Sorteio> sorteios = null;
 			List<Rateio> rateios = null;
-			
-			/* Lotofácil */
-			driver.get("http://loterias.caixa.gov.br/wps/portal/loterias/landing/lotofacil/");
-			LotofacilPage lotofacilPage = PageFactory.initElements(driver, LotofacilPage.class);
-			loteria = loteriaService.encontre(1L);
-			Integer ultimoNumeroConcurso = this.concursoService.ultimoNumeroConcurso(1L);
-			Integer numeroConcursoInicial = ultimoNumeroConcurso + 1;
-			Integer numeroConcursoFinal = lotofacilPage.getConcurso() + 1;
-			if(numeroConcursoInicial == numeroConcursoFinal) {
-				System.out.println(loteria.getNome()+"::Número do último concurso no BD "+ultimoNumeroConcurso+" é igual ao número do último concurso no site "+lotofacilPage.getConcurso());
-			} else {
-				System.out.println(loteria.getNome()+"::Número do último concurso no BD : "+ultimoNumeroConcurso);
-				System.out.println(loteria.getNome()+"::Número do último concurso no site : "+lotofacilPage.getConcurso());
-				System.out.println(loteria.getNome()+"::Salvando entre "+numeroConcursoInicial+" e "+lotofacilPage.getConcurso()+"...");
-			}
-			
-			for(Integer i = numeroConcursoInicial; i < numeroConcursoFinal; i++) {
-				buscaConcurso = driver.findElement(By.id("buscaConcurso"));
-				buscaConcurso.sendKeys(i.toString());//1660
-				
-				wait = new WebDriverWait(driver, 1000);
-				buscaConcurso.sendKeys(Keys.ENTER);
-				wait.until(ExpectedConditions.textToBePresentInElementLocated(By.xpath("//*[@id='resultados']//*[contains(text(),'Concurso')]"), i.toString()));
-				
-				concurso = lotofacilPage.paraConcursoEntity(loteria);
-				
-				sorteios = lotofacilPage.paraSorteiosEntityList(concurso);
-				
-				rateios = lotofacilPage.paraRateiosEntityList(sorteios);
-				System.out.println(loteria.getNome()+"::Concurso: "+concurso.getNumero());
-				rateioService.insiraTodos(rateios);
-				buscaConcurso.clear();
-			}
-			System.out.println(loteria.getNome()+"::Concursos salvos!");
-			
+			Integer ultimoNumeroConcurso = null;
+			Integer numeroConcursoInicial = null;
+			Integer numeroConcursoFinal = null;
+//			
+//			/* Lotofácil */
+//			driver.get("http://loterias.caixa.gov.br/wps/portal/loterias/landing/lotofacil/");
+//			LotofacilPage lotofacilPage = PageFactory.initElements(driver, LotofacilPage.class);
+//			loteria = loteriaService.encontre(1L);
+//			Integer ultimoNumeroConcurso = this.concursoService.ultimoNumeroConcurso(1L);
+//			Integer numeroConcursoInicial = ultimoNumeroConcurso + 1;
+//			Integer numeroConcursoFinal = lotofacilPage.getConcurso() + 1;
+//			if(ultimoNumeroConcurso.equals(lotofacilPage.getConcurso())) {
+//				System.out.println(loteria.getNome()+"::Número do último concurso no BD "+ultimoNumeroConcurso+" é igual ao número do último concurso no site "+lotofacilPage.getConcurso());
+//			} else {
+//				System.out.println(loteria.getNome()+"::Número do último concurso no BD : "+ultimoNumeroConcurso);
+//				System.out.println(loteria.getNome()+"::Número do último concurso no site : "+lotofacilPage.getConcurso());
+//				System.out.println(loteria.getNome()+"::Salvando entre "+numeroConcursoInicial+" e "+lotofacilPage.getConcurso()+"...");
+//			}
+//			
+//			for(Integer i = numeroConcursoInicial; i < numeroConcursoFinal; i++) {
+//				buscaConcurso = driver.findElement(By.id("buscaConcurso"));
+//				buscaConcurso.sendKeys(i.toString());//1660
+//				
+//				wait = new WebDriverWait(driver, 1000);
+//				buscaConcurso.sendKeys(Keys.ENTER);
+//				wait.until(ExpectedConditions.textToBePresentInElementLocated(By.xpath("//*[@id='resultados']//*[contains(text(),'Concurso')]"), i.toString()));
+//				
+//				concurso = lotofacilPage.paraConcursoEntity(loteria);
+//				
+//				sorteios = lotofacilPage.paraSorteiosEntityList(concurso);
+//				
+//				rateios = lotofacilPage.paraRateiosEntityList(sorteios);
+//				System.out.println(loteria.getNome()+"::Concurso: "+concurso.getNumero());
+//				rateioService.insiraTodos(rateios);
+//				buscaConcurso.clear();
+//			}
+//			if(!ultimoNumeroConcurso.equals(lotofacilPage.getConcurso())) System.out.println(loteria.getNome()+"::Concursos salvos!");
+//			
 //			/* Duplasena */
 //			driver.get("http://loterias.caixa.gov.br/wps/portal/loterias/landing/duplasena/");
 //			DuplaSenaPage duplaSenaPage = PageFactory.initElements(driver, DuplaSenaPage.class);
-//			
-//			for(Integer i = 1771; i < 1791; i++) {
+//			loteria = loteriaService.encontre(6L);
+//			ultimoNumeroConcurso = this.concursoService.ultimoNumeroConcurso(6L);
+//			numeroConcursoInicial = ultimoNumeroConcurso + 1;
+//			numeroConcursoFinal = duplaSenaPage.getConcurso() + 1;
+//			if(ultimoNumeroConcurso.equals(duplaSenaPage.getConcurso())) {
+//				System.out.println(loteria.getNome()+"::Número do último concurso no BD "+ultimoNumeroConcurso+" é igual ao número do último concurso no site "+duplaSenaPage.getConcurso());
+//			} else {
+//				System.out.println(loteria.getNome()+"::Número do último concurso no BD : "+ultimoNumeroConcurso);
+//				System.out.println(loteria.getNome()+"::Número do último concurso no site : "+duplaSenaPage.getConcurso());
+//				System.out.println(loteria.getNome()+"::Salvando entre "+numeroConcursoInicial+" e "+duplaSenaPage.getConcurso()+"...");
+//			}
+//			for(Integer i = numeroConcursoInicial; i < numeroConcursoFinal; i++) {
 //				buscaConcurso = driver.findElement(By.id("buscaConcurso"));
 //				buscaConcurso.sendKeys(i.toString());//1709
 //				
 //				wait = new WebDriverWait(driver, 1000);
 //				buscaConcurso.sendKeys(Keys.ENTER);
 //				wait.until(ExpectedConditions.textToBePresentInElementLocated(By.xpath("//*[@id='resultados']//*[contains(text(),'Concurso')]"), i.toString()));
-//				
-//				loteria = loteriaService.encontre(6L);
 //				
 //				concurso = duplaSenaPage.paraConcursoEntity(loteria);
 //				
@@ -96,38 +107,60 @@ public class ProfileTestService {
 //				rateios = new LinkedList<Rateio>();
 //				rateios.addAll(duplaSenaPage.paraRateiosEntityList(sorteios, 0));
 //				rateios.addAll(duplaSenaPage.paraRateiosEntityList(sorteios, 1));
+//				System.out.println(loteria.getNome()+"::Concurso: "+concurso.getNumero());
 //				rateioService.insiraTodos(rateios);
 //				buscaConcurso.clear();
 //			}
+//			if(!ultimoNumeroConcurso.equals(duplaSenaPage.getConcurso())) System.out.println(loteria.getNome()+"::Concursos salvos!");
 //			
 //			/* Lotomania */
-//			driver.get("http://loterias.caixa.gov.br/wps/portal/loterias/landing/lotomania/");
-//			LotomaniaPage lotomaniaPage = PageFactory.initElements(driver, LotomaniaPage.class);
-//			
-//			for(Integer i = 1848; i < 1868; i++) {
-//				buscaConcurso = driver.findElement(By.id("buscaConcurso"));
-//				buscaConcurso.sendKeys(i.toString());//1863
-//				
-//				wait = new WebDriverWait(driver, 1000);
-//				buscaConcurso.sendKeys(Keys.ENTER);
-//				wait.until(ExpectedConditions.textToBePresentInElementLocated(By.xpath("//*[@id='resultados']//*[contains(text(),'Concurso')]"), i.toString()));
-//				
-//				loteria = loteriaService.encontre(4L);
-//				
-//				concurso = lotomaniaPage.paraConcursoEntity(loteria);
-//				
-//				sorteios = lotomaniaPage.paraSorteiosEntityList(concurso);
-//				
-//				rateios = lotomaniaPage.paraRateiosEntityList(sorteios);
-//				rateioService.insiraTodos(rateios);
-//				buscaConcurso.clear();
-//			}
+			driver.get("http://loterias.caixa.gov.br/wps/portal/loterias/landing/lotomania/");
+			LotomaniaPage lotomaniaPage = PageFactory.initElements(driver, LotomaniaPage.class);
+			loteria = loteriaService.encontre(4L);
+			ultimoNumeroConcurso = this.concursoService.ultimoNumeroConcurso(4L);
+			numeroConcursoInicial = ultimoNumeroConcurso + 1;
+			numeroConcursoFinal = lotomaniaPage.getConcurso() + 1;
+			if(lotomaniaPage.getConcurso().equals(ultimoNumeroConcurso)) {
+				System.out.println(loteria.getNome()+"::Número do último concurso no BD "+ultimoNumeroConcurso+" é igual ao número do último concurso no site "+lotomaniaPage.getConcurso());
+			} else {
+				System.out.println(loteria.getNome()+"::Número do último concurso no BD : "+ultimoNumeroConcurso);
+				System.out.println(loteria.getNome()+"::Número do último concurso no site : "+lotomaniaPage.getConcurso());
+				System.out.println(loteria.getNome()+"::Salvando entre "+numeroConcursoInicial+" e "+lotomaniaPage.getConcurso()+"...");
+			}
+			for(Integer i = numeroConcursoInicial; i < numeroConcursoFinal; i++) {
+				buscaConcurso = driver.findElement(By.id("buscaConcurso"));
+				buscaConcurso.sendKeys(i.toString());//1863
+				
+				wait = new WebDriverWait(driver, 1000);
+				buscaConcurso.sendKeys(Keys.ENTER);
+				wait.until(ExpectedConditions.textToBePresentInElementLocated(By.xpath("//*[@id='resultados']//*[contains(text(),'Concurso')]"), i.toString()));
+				
+				concurso = lotomaniaPage.paraConcursoEntity(loteria);
+				
+				sorteios = lotomaniaPage.paraSorteiosEntityList(concurso);
+				
+				rateios = lotomaniaPage.paraRateiosEntityList(sorteios);
+				System.out.println(loteria.getNome()+"::Concurso: "+concurso.getNumero());
+				rateioService.insiraTodos(rateios);
+				buscaConcurso.clear();
+			}
+			if(!lotomaniaPage.getConcurso().equals(ultimoNumeroConcurso)) System.out.println(loteria.getNome()+"::Concursos salvos!");
 //			
 //			/* Timemania */
 //			driver.get("http://loterias.caixa.gov.br/wps/portal/loterias/landing/timemania/");
 //			TimemaniaPage timemaniaPage = PageFactory.initElements(driver, TimemaniaPage.class);
-//			
-//			for(Integer i = 1163; i < 1183; i++) {
+//			loteria = loteriaService.encontre(5L);
+//			ultimoNumeroConcurso = this.concursoService.ultimoNumeroConcurso(5L);
+//			numeroConcursoInicial = ultimoNumeroConcurso + 1;
+//			numeroConcursoFinal = timemaniaPage.getConcurso() + 1;
+//			if(ultimoNumeroConcurso.equals(timemaniaPage.getConcurso())) {
+//				System.out.println(loteria.getNome()+"::Número do último concurso no BD "+ultimoNumeroConcurso+" é igual ao número do último concurso no site "+timemaniaPage.getConcurso());
+//			} else {
+//				System.out.println(loteria.getNome()+"::Número do último concurso no BD : "+ultimoNumeroConcurso);
+//				System.out.println(loteria.getNome()+"::Número do último concurso no site : "+timemaniaPage.getConcurso());
+//				System.out.println(loteria.getNome()+"::Salvando entre "+numeroConcursoInicial+" e "+timemaniaPage.getConcurso()+"...");
+//			}
+//			for(Integer i = numeroConcursoInicial; i < numeroConcursoFinal; i++) {
 //				buscaConcurso = driver.findElement(By.id("buscaConcurso"));
 //				buscaConcurso.sendKeys(i.toString());//1140
 //				
@@ -135,68 +168,100 @@ public class ProfileTestService {
 //				buscaConcurso.sendKeys(Keys.ENTER);
 //				wait.until(ExpectedConditions.textToBePresentInElementLocated(By.xpath("//*[@id='resultados']//*[contains(text(),'Concurso')]"), i.toString()));
 //				
-//				loteria = loteriaService.encontre(5L);
-//				
 //				concurso = timemaniaPage.paraConcursoEntity(loteria);
 //				
 //				sorteios = timemaniaPage.paraSorteiosEntityList(concurso);
 //				
 //				rateios = timemaniaPage.paraRateiosEntityList(sorteios);
+//				
+//				System.out.println(loteria.getNome()+"::Concurso: "+concurso.getNumero());
 //				rateioService.insiraTodos(rateios);
 //				buscaConcurso.clear();
 //			}
+//			if(!ultimoNumeroConcurso.equals(timemaniaPage.getConcurso())) System.out.println(loteria.getNome()+"::Concursos salvos!");
 //
 //			/* Mega-Sena */
 //			driver.get("http://loterias.caixa.gov.br/wps/portal/loterias/landing/megasena/");
 //			MegaSenaPage megaSenaPage = PageFactory.initElements(driver, MegaSenaPage.class);
-//			
-//			for(Integer i = 2022; i < 2042; i++) {
+//			loteria = loteriaService.encontre(2L);
+//			ultimoNumeroConcurso = this.concursoService.ultimoNumeroConcurso(2L);
+//			numeroConcursoInicial = ultimoNumeroConcurso + 1;
+//			numeroConcursoFinal = megaSenaPage.getConcurso() + 1;
+//			if(ultimoNumeroConcurso.equals(megaSenaPage.getConcurso())) {
+//				System.out.println(loteria.getNome()+"::Número do último concurso no BD "+ultimoNumeroConcurso+" é igual ao número do último concurso no site "+megaSenaPage.getConcurso());
+//			} else {
+//				System.out.println(loteria.getNome()+"::Número do último concurso no BD : "+ultimoNumeroConcurso);
+//				System.out.println(loteria.getNome()+"::Número do último concurso no site : "+megaSenaPage.getConcurso());
+//				System.out.println(loteria.getNome()+"::Salvando entre "+numeroConcursoInicial+" e "+megaSenaPage.getConcurso()+"...");
+//			}
+//			for(Integer i = numeroConcursoInicial; i < numeroConcursoFinal; i++) {
 //				buscaConcurso = driver.findElement(By.id("buscaConcurso"));
 //				buscaConcurso.sendKeys(i.toString());
 //				
 //				wait = new WebDriverWait(driver, 1000);
 //				buscaConcurso.sendKeys(Keys.ENTER);
 //				wait.until(ExpectedConditions.textToBePresentInElementLocated(By.xpath("//*[@id='resultados']//*[contains(text(),'Concurso')]"), i.toString()));
-//				
-//				loteria = loteriaService.encontre(2L);
-//				
+//								
 //				concurso = megaSenaPage.paraConcursoEntity(loteria);
 //				
 //				sorteios = megaSenaPage.paraSorteiosEntityList(concurso);
 //				
 //				rateios = megaSenaPage.paraRateiosEntityList(sorteios);
+//				
+//				System.out.println(loteria.getNome()+"::Concurso: "+concurso.getNumero());
 //				rateioService.insiraTodos(rateios);
 //				buscaConcurso.clear();
 //			}
+//			if(!ultimoNumeroConcurso.equals(megaSenaPage.getConcurso())) System.out.println(loteria.getNome()+"::Concursos salvos!");
 //			
 //			/* Quina */
 //			driver.get("http://loterias.caixa.gov.br/wps/portal/loterias/landing/quina/");
 //			QuinaPage quinaPage = PageFactory.initElements(driver, QuinaPage.class);
-//			
-//			for(Integer i = 4665; i < 4685; i++) {
+//			loteria = loteriaService.encontre(3L);
+//			ultimoNumeroConcurso = this.concursoService.ultimoNumeroConcurso(3L);
+//			numeroConcursoInicial = ultimoNumeroConcurso + 1;
+//			numeroConcursoFinal = quinaPage.getConcurso() + 1;
+//			if(ultimoNumeroConcurso.equals(quinaPage.getConcurso())) {
+//				System.out.println(loteria.getNome()+"::Número do último concurso no BD "+ultimoNumeroConcurso+" é igual ao número do último concurso no site "+quinaPage.getConcurso());
+//			} else {
+//				System.out.println(loteria.getNome()+"::Número do último concurso no BD : "+ultimoNumeroConcurso);
+//				System.out.println(loteria.getNome()+"::Número do último concurso no site : "+quinaPage.getConcurso());
+//				System.out.println(loteria.getNome()+"::Salvando entre "+numeroConcursoInicial+" e "+quinaPage.getConcurso()+"...");
+//			}
+//			for(Integer i = numeroConcursoInicial; i < numeroConcursoFinal; i++) {
 //				buscaConcurso = driver.findElement(By.id("buscaConcurso"));
 //				buscaConcurso.sendKeys(i.toString());
 //				
 //				wait = new WebDriverWait(driver, 1000);
 //				buscaConcurso.sendKeys(Keys.ENTER);
 //				wait.until(ExpectedConditions.textToBePresentInElementLocated(By.xpath("//*[@id='resultados']//*[contains(text(),'Concurso')]"), i.toString()));
-//				
-//				loteria = loteriaService.encontre(3L);
 //				
 //				concurso = quinaPage.paraConcursoEntity(loteria);
 //				
 //				sorteios = quinaPage.paraSorteiosEntityList(concurso);
 //				
 //				rateios = quinaPage.paraRateiosEntityList(sorteios);
+//				System.out.println(loteria.getNome()+"::Concurso: "+concurso.getNumero());
 //				rateioService.insiraTodos(rateios);
 //				buscaConcurso.clear();
 //			}
+//			if(!ultimoNumeroConcurso.equals(quinaPage.getConcurso())) System.out.println(loteria.getNome()+"::Concursos salvos!");
 //			
 //			/* Dia de Sorte */
 //			driver.get("http://loterias.caixa.gov.br/wps/portal/loterias/landing/diadesorte/");
 //			DiaDeSortePage diaDeSorte = PageFactory.initElements(driver, DiaDeSortePage.class);
-//			
-//			for(Integer i = 1; i < 5; i++) {
+//			loteria = loteriaService.encontre(7L);
+//			ultimoNumeroConcurso = this.concursoService.ultimoNumeroConcurso(7L);
+//			numeroConcursoInicial = ultimoNumeroConcurso + 1;
+//			numeroConcursoFinal = diaDeSorte.getConcurso() + 1;
+//			if(ultimoNumeroConcurso.equals(diaDeSorte.getConcurso())) {
+//				System.out.println(loteria.getNome()+"::Número do último concurso no BD "+ultimoNumeroConcurso+" é igual ao número do último concurso no site "+diaDeSorte.getConcurso());
+//			} else {
+//				System.out.println(loteria.getNome()+"::Número do último concurso no BD : "+ultimoNumeroConcurso);
+//				System.out.println(loteria.getNome()+"::Número do último concurso no site : "+diaDeSorte.getConcurso());
+//				System.out.println(loteria.getNome()+"::Salvando entre "+numeroConcursoInicial+" e "+diaDeSorte.getConcurso()+"...");
+//			}
+//			for(Integer i = numeroConcursoInicial; i < numeroConcursoFinal; i++) {
 //				buscaConcurso = driver.findElement(By.id("buscaConcurso"));
 //				buscaConcurso.sendKeys(i.toString());
 //				
@@ -204,18 +269,21 @@ public class ProfileTestService {
 //				buscaConcurso.sendKeys(Keys.ENTER);
 //				wait.until(ExpectedConditions.textToBePresentInElementLocated(By.xpath("//*[@id='resultados']//*[contains(text(),'Concurso')]"), i.toString()));
 //				
-//				loteria = loteriaService.encontre(3L);
+//				loteria = loteriaService.encontre(7L);
 //				
 //				concurso = diaDeSorte.paraConcursoEntity(loteria);
 //				
 //				sorteios = diaDeSorte.paraSorteiosEntityList(concurso);
 //				
 //				rateios = diaDeSorte.paraRateiosEntityList(sorteios);
+//				
+//				System.out.println(loteria.getNome()+"::Concurso: "+concurso.getNumero());
 //				rateioService.insiraTodos(rateios);
 //				buscaConcurso.clear();
 //			}
+//			if(!ultimoNumeroConcurso.equals(diaDeSorte.getConcurso())) System.out.println(loteria.getNome()+"::Concursos salvos!");
 		} finally {
 			driver.close();
-		}
+		}	
 	}
 }
