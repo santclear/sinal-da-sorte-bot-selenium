@@ -71,6 +71,7 @@ public class LotomaniaPage extends BasePage {
 	@Override
 	public Concurso paraConcursoEntity(Loteria loteria) {
 		Concurso obj = new Concurso();
+		obj.setLocalizacaoSorteio(super.getLocalizacaoSorteio());
 		obj.setArrecadacaoTotal(this.getArrecadacaoTotal());
 		obj.setEstimativaDePremioParaOProximoConcurso(this.getEstimativaDePremioParaOProximoConcurso());
 		obj.setDataDoSorteio(this.getDataSorteio());

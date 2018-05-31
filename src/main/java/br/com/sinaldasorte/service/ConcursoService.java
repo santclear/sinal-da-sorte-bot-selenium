@@ -23,8 +23,12 @@ public class ConcursoService {
 		return obj.orElseThrow(() -> new ObjetoNaoEncontradoException("Objeto não encontrado! Id: " + id + ", Tipo: " + Concurso.class.getName()));
 	}
 	
+	public Integer ultimoNumeroConcurso(Long idLoteria) {
+		return repo.ultimoNumeroConcurso(idLoteria);
+	}
+	
 	public Concurso insira(Concurso obj) {
-		Integer maxNumeroConcursoLoteriaBd = this.repo.maxNumeroConcursoLoteria(obj.getLoteria().getId());
+		Integer maxNumeroConcursoLoteriaBd = this.repo.ultimoNumeroConcurso(obj.getLoteria().getId());
 		Integer difEntreNumConcursoNovoENumConcursoBd = obj.getNumero() - maxNumeroConcursoLoteriaBd;
 //		if(difEntreNumConcursoNovoENumConcursoBd == 1) 
 		return	repo.save(obj);

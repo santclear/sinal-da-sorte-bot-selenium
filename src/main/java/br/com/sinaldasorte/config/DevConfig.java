@@ -28,9 +28,9 @@ public class DevConfig {
 	@Bean
 	public boolean init() {
 		
-		if (!"create".equals(strategy)) {
-			return false;
-		}
+//		if (!"create".equals(strategy)) {
+//			return false;
+//		}
 		
 		service.init();
 		return true;

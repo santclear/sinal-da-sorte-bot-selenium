@@ -43,11 +43,8 @@ public class Concurso implements Serializable {
 	@Column(precision = 15, scale = 2)
 	private BigDecimal arrecadacaoTotal;
 	
-	@Column(length = 50)
-	private String cidade;
-	
-	@Column(length = 2)
-	private String uf;
+	@Column(length = 1000)
+	private String localizacaoSorteio;
 	
 	@Column(precision = 15, scale = 2)
 	private BigDecimal estimativaDePremioParaOProximoConcurso;
@@ -60,7 +57,7 @@ public class Concurso implements Serializable {
 	
 	public Concurso() {}
 	
-	public Concurso(Long id, Loteria loteria, Integer numero, Calendar dataDoSorteio, BigDecimal arrecadacaoTotal, String cidade, String uf,
+	public Concurso(Long id, Loteria loteria, Integer numero, Calendar dataDoSorteio, BigDecimal arrecadacaoTotal, String localizacaoSorteio,
 		BigDecimal estimativaDePremioParaOProximoConcurso, BigDecimal acumuladoEspecial) {
 		super();
 		this.id = id;
@@ -68,8 +65,7 @@ public class Concurso implements Serializable {
 		this.numero = numero;
 		this.dataDoSorteio = dataDoSorteio;
 		this.arrecadacaoTotal = arrecadacaoTotal;
-		this.cidade = cidade;
-		this.uf = uf;
+		this.localizacaoSorteio = localizacaoSorteio;
 		this.estimativaDePremioParaOProximoConcurso = estimativaDePremioParaOProximoConcurso;
 		this.acumuladoEspecial = acumuladoEspecial;
 	}
@@ -114,20 +110,12 @@ public class Concurso implements Serializable {
 		this.arrecadacaoTotal = arrecadacaoTotal;
 	}
 
-	public String getCidade() {
-		return cidade;
+	public String getLocalizacaoSorteio() {
+		return localizacaoSorteio;
 	}
 
-	public void setCidade(String cidade) {
-		this.cidade = cidade;
-	}
-
-	public String getUf() {
-		return uf;
-	}
-
-	public void setUf(String uf) {
-		this.uf = uf;
+	public void setLocalizacaoSorteio(String localizacaoSorteio) {
+		this.localizacaoSorteio = localizacaoSorteio;
 	}
 
 	public BigDecimal getEstimativaDePremioParaOProximoConcurso() {

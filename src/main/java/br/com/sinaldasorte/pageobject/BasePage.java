@@ -27,6 +27,9 @@ public abstract class BasePage {
 	@FindBy(xpath="//*[@id='resultados']//*[contains(text(),'Concurso')]")
 	private WebElement concurso;
 	
+	@FindBy(xpath="//*[contains(text(), 'Sorteio realizado')]")
+	private WebElement localizacaoSorteio;
+	
 	@FindBy(xpath="//*[contains(text(),'Estimativa de prêmio do próximo concurso')]//following-sibling::*[contains(text(),'R$')]")
 	private WebElement estimativaDePremioParaOProximoConcurso;
 	
@@ -59,6 +62,10 @@ public abstract class BasePage {
 		} else {
 			throw new ObjetoNaoEncontradoException("Não foi possível extrair o número do concurso.");
 		}
+	}
+	
+	public String getLocalizacaoSorteio() {
+		return localizacaoSorteio.getText().trim();
 	}
 	
 	public BigDecimal getEstimativaDePremioParaOProximoConcurso() {
@@ -112,18 +119,19 @@ public abstract class BasePage {
 	}
 	
 	public BigDecimal getArrecadacaoTotal() {
-		// String do sorteio especial, exemplo: R$ 10.000,00
-		String texto = arrecadacaoTotal.getText();
-		// Formato do regex para extrair somente o valor, exemplo: 10.000,00
-		Pattern pattern = Pattern.compile("\\d+.+");
-		Matcher matcher = pattern.matcher(texto);
-		if (matcher.find()) {
+		try {
+			// String do sorteio especial, exemplo: R$ 10.000,00
+			String texto = arrecadacaoTotal.getText();
+			// Formato do regex para extrair somente o valor, exemplo: 10.000,00
+			Pattern pattern = Pattern.compile("\\d+.+");
+			Matcher matcher = pattern.matcher(texto);
+			matcher.find();
 			// Exclui os pontos (.), substitui o serador decimal vírgula (,) por ponto(.)
 			texto = matcher.group().replaceAll("\\.", "").replaceAll(",", "\\.");
 			BigDecimal numero = new BigDecimal(texto);
 			return numero;
-		} else {
-			throw new ObjetoNaoEncontradoException("Não foi possível extrair o valor da Arrecadação Total.");
+		} catch(NoSuchElementException e) {
+			return new BigDecimal(0);
 		}
 	}
 	
@@ -155,8 +163,6 @@ public abstract class BasePage {
 		if(!cidadesStr.toString().isEmpty()) {
 			sorteios.add(cidadesStr.toString().substring(0, cidadesStr.toString().length() - 1));
 		} else {
-//			cidadesStr.append(";");
-//			sorteios.add(cidadesStr.toString());
 			sorteios.add(null);
 		}
 	}
@@ -190,7 +196,6 @@ public abstract class BasePage {
 		if(!ufsStr.toString().isEmpty()) {
 			sorteios.add(ufsStr.toString().substring(0, ufsStr.toString().length() - 1));
 		} else {
-//			sorteios.add(ufsStr.toString());
 			sorteios.add(null);
 		}
 	}
@@ -250,8 +255,9 @@ public abstract class BasePage {
 				BigDecimal rateioBd = Objects.deepEquals(texto, "não houve")?new BigDecimal(0):new BigDecimal(texto);
 				rateiosBd.add(rateioBd);
 			}
+			if("Veja o detalhamento".equals(texto)) rateiosBd.add(new BigDecimal(0));
 		}
-		rateiosBd.pollLast();
+		
 		sorteios.add(rateiosBd);
 	}
 	
@@ -281,6 +287,7 @@ public abstract class BasePage {
 	
 	public Concurso paraConcursoEntity(Loteria loteria) {
 		Concurso obj = new Concurso();
+		obj.setLocalizacaoSorteio(this.getLocalizacaoSorteio());
 		obj.setAcumuladoEspecial(this.getAcumuladoEspecial());
 		obj.setArrecadacaoTotal(this.getArrecadacaoTotal());
 		obj.setEstimativaDePremioParaOProximoConcurso(this.getEstimativaDePremioParaOProximoConcurso());

@@ -11,5 +11,5 @@ import br.com.sinaldasorte.domain.Concurso;
 public interface ConcursoRepository extends JpaRepository<Concurso, Long> {
 	@Transactional(readOnly = true)
 	@Query("SELECT max(concurso.numero) FROM Concurso concurso inner join concurso.loteria loteria WHERE loteria.id = ?1")
-	Integer maxNumeroConcursoLoteria(Long idLoteria);
+	Integer ultimoNumeroConcurso(Long idLoteria);
 }
