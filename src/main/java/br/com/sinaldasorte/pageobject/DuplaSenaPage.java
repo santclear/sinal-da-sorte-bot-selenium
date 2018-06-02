@@ -22,10 +22,16 @@ public class DuplaSenaPage extends BasePage {
 	@FindBy(xpath="//h3[contains(text(),'Detalhamento - 2')]//following-sibling::p//strong")
 	private List<WebElement> cidadesUfs2;
 	
-	@FindBy(xpath="//h3[contains(text(),'Premiação - 1')]//following-sibling::p")
+	@FindBy(xpath="//h3[contains(text(),'Premiação - 1')]//following-sibling::p[1]"
+			+ "|//h3[contains(text(),'Premiação - 1')]//following-sibling::p[2]"
+			+ "|//h3[contains(text(),'Premiação - 1')]//following-sibling::p[3]"
+			+ "|//h3[contains(text(),'Premiação - 1')]//following-sibling::p[4]")
 	private List<WebElement> rateios1;
 	
-	@FindBy(xpath="//h3[contains(text(),'Premiação - 2')]//following-sibling::p")
+	@FindBy(xpath="//h3[contains(text(),'Premiação - 2')]//following-sibling::p[1]"
+			+ "|//h3[contains(text(),'Premiação - 2')]//following-sibling::p[2]"
+			+ "|//h3[contains(text(),'Premiação - 2')]//following-sibling::p[3]"
+			+ "|//h3[contains(text(),'Premiação - 2')]//following-sibling::p[4]")
 	private List<WebElement> rateios2;
 	
 	@Override
@@ -67,7 +73,7 @@ public class DuplaSenaPage extends BasePage {
 	public List<List<BigDecimal>> getRateios() {
 		List<List<BigDecimal>> sorteios = new LinkedList<>();
 		
-		if(!rateios1.isEmpty()) super.addRateios(sorteios, rateios1.subList(0, 5));
+		if(!rateios1.isEmpty()) super.addRateios(sorteios, rateios1.subList(0, 4));
 		if(!rateios2.isEmpty()) super.addRateios(sorteios, rateios2);
 		
 		return sorteios;

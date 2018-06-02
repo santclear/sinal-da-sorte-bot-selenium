@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import br.com.sinaldasorte.domain.Concurso;
 import br.com.sinaldasorte.repository.ConcursoRepository;
 import br.com.sinaldasorte.service.exceptions.ObjetoNaoEncontradoException;
-import br.com.sinaldasorte.service.exceptions.ProcessamentoInternoException;
 
 @Service
 public class ConcursoService {
@@ -28,8 +27,8 @@ public class ConcursoService {
 	}
 	
 	public Concurso insira(Concurso obj) {
-		Integer maxNumeroConcursoLoteriaBd = this.repo.ultimoNumeroConcurso(obj.getLoteria().getId());
-		Integer difEntreNumConcursoNovoENumConcursoBd = obj.getNumero() - maxNumeroConcursoLoteriaBd;
+//		Integer maxNumeroConcursoLoteriaBd = this.repo.ultimoNumeroConcurso(obj.getLoteria().getId());
+//		Integer difEntreNumConcursoNovoENumConcursoBd = obj.getNumero() - maxNumeroConcursoLoteriaBd;
 //		if(difEntreNumConcursoNovoENumConcursoBd == 1) 
 		return	repo.save(obj);
 //		else throw new ProcessamentoInternoException(

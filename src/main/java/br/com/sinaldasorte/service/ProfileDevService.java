@@ -48,7 +48,7 @@ public class ProfileDevService {
 			List<Sorteio> sorteios = null;
 			List<Rateio> rateios = null;
 			
-			/* Lotofácil */
+			/* Lotofácil */ // 900
 			driver.get("http://loterias.caixa.gov.br/wps/portal/loterias/landing/lotofacil/");
 			LotofacilPage lotofacilPage = PageFactory.initElements(driver, LotofacilPage.class);
 			loteria = loteriaService.encontre(1L);
@@ -65,7 +65,7 @@ public class ProfileDevService {
 			
 			for(Integer i = numeroConcursoInicial; i < numeroConcursoFinal; i++) {
 				buscaConcurso = driver.findElement(By.id("buscaConcurso"));
-				buscaConcurso.sendKeys(i.toString());//1660
+				buscaConcurso.sendKeys(i.toString());
 				
 				wait = new WebDriverWait(driver, 1000);
 				buscaConcurso.sendKeys(Keys.ENTER);
@@ -82,7 +82,7 @@ public class ProfileDevService {
 			}
 			if(!ultimoNumeroConcurso.equals(lotofacilPage.getConcurso())) System.out.println(loteria.getNome()+"::Concursos salvos!");
 			
-			/* Duplasena */
+			/* Duplasena */ // 1484
 			driver.get("http://loterias.caixa.gov.br/wps/portal/loterias/landing/duplasena/");
 			DuplaSenaPage duplaSenaPage = PageFactory.initElements(driver, DuplaSenaPage.class);
 			loteria = loteriaService.encontre(6L);
@@ -98,7 +98,7 @@ public class ProfileDevService {
 			}
 			for(Integer i = numeroConcursoInicial; i < numeroConcursoFinal; i++) {
 				buscaConcurso = driver.findElement(By.id("buscaConcurso"));
-				buscaConcurso.sendKeys(i.toString());//1709
+				buscaConcurso.sendKeys(i.toString());
 				
 				wait = new WebDriverWait(driver, 1000);
 				buscaConcurso.sendKeys(Keys.ENTER);
@@ -133,7 +133,7 @@ public class ProfileDevService {
 			}
 			for(Integer i = numeroConcursoInicial; i < numeroConcursoFinal; i++) {
 				buscaConcurso = driver.findElement(By.id("buscaConcurso"));
-				buscaConcurso.sendKeys(i.toString());//1863
+				buscaConcurso.sendKeys(i.toString());
 				
 				wait = new WebDriverWait(driver, 1000);
 				buscaConcurso.sendKeys(Keys.ENTER);
@@ -166,7 +166,7 @@ public class ProfileDevService {
 			}
 			for(Integer i = numeroConcursoInicial; i < numeroConcursoFinal; i++) {
 				buscaConcurso = driver.findElement(By.id("buscaConcurso"));
-				buscaConcurso.sendKeys(i.toString());//1140
+				buscaConcurso.sendKeys(i.toString());
 				
 				wait = new WebDriverWait(driver, 1000);
 				buscaConcurso.sendKeys(Keys.ENTER);
@@ -184,7 +184,7 @@ public class ProfileDevService {
 			}
 			if(!ultimoNumeroConcurso.equals(timemaniaPage.getConcurso())) System.out.println(loteria.getNome()+"::Concursos salvos!");
 
-			/* Mega-Sena */
+			/* Mega-Sena */ // 1000
 			driver.get("http://loterias.caixa.gov.br/wps/portal/loterias/landing/megasena/");
 			MegaSenaPage megaSenaPage = PageFactory.initElements(driver, MegaSenaPage.class);
 			loteria = loteriaService.encontre(2L);
@@ -218,7 +218,7 @@ public class ProfileDevService {
 			}
 			if(!ultimoNumeroConcurso.equals(megaSenaPage.getConcurso())) System.out.println(loteria.getNome()+"::Concursos salvos!");
 			
-			/* Quina */
+			/* Quina */ // 2630
 			driver.get("http://loterias.caixa.gov.br/wps/portal/loterias/landing/quina/");
 			QuinaPage quinaPage = PageFactory.initElements(driver, QuinaPage.class);
 			loteria = loteriaService.encontre(3L);

@@ -3,7 +3,6 @@ package br.com.sinaldasorte.pageobject;
 import java.math.BigDecimal;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -145,21 +144,12 @@ public class QuinaPage extends BasePage {
 		return sorteios;
 	}
 	
-	@Override
-	public void addNumeroGanhadores(List<List<Integer>> sorteios, List<WebElement> rateios) {
-		LinkedList<Integer> numeroGanhadores = new LinkedList<>();
-		for(WebElement rateio: rateios) {
-			String texto = rateio.getText();
-			Pattern pattern = Pattern.compile("(\\d+\\saposta)|(\\wão\\s\\wouve)");
-			Matcher matcher = pattern.matcher(texto);
-			if (matcher.find()) {
-				texto = matcher.group();
-				texto = texto.toLowerCase();
-				Integer numeroGanhoresInt = Objects.deepEquals(texto, "não houve")?new Integer(0):new Integer(texto.replaceAll("\\D", "").trim());
-				numeroGanhadores.add(numeroGanhoresInt);
-			}
-		}
-		sorteios.add(numeroGanhadores);
+	public List<List<BigDecimal>> getRateios() {
+		List<List<BigDecimal>> sorteios = new LinkedList<>();
+		
+		this.addRateios(sorteios, rateios);
+		
+		return sorteios;
 	}
 	
 	@Override
